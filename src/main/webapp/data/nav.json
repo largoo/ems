@@ -10,6 +10,10 @@
 			"text": "设备维护记录",
 			"leaf": true,
 			"url": "Order"
+		},{
+			"text": "tree",
+			"leaf": true,
+			"url": "Tree"
 		}]
 	}
 }, {
