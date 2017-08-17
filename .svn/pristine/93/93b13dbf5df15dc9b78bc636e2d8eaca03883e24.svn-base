@@ -1,0 +1,45 @@
+[{
+	"title": "组件设备履历系统",
+	"root": {
+		"children": [{
+			"text": "设备基本信息管理",
+			"leaf": true,
+			"url": "Equip"
+		},{
+			"text": "入库单",
+			"leaf": true,
+			"url": "BillIn",
+			"roleid" : 1
+		}]
+	}
+}, {
+	"title": "信息维护",
+	"root": {
+		"children": [{
+			"text": "库位",
+			"leaf": true,
+			"url": "Location",
+			"roleid" : 2
+		},{
+			"text": "用户管理",
+			"leaf": true,
+			"url": "User",
+			"roleid" : 1
+		}, {
+			"text": "物品信息维护",
+			"leaf": true,
+			"url": "GoodInfo",
+			"roleid" : 1
+		}, {
+			"text": "单位维护",
+			"leaf": true,
+			"url": "Unit",
+			"roleid" : 1
+		},{
+			"text": "邮件通知维护",
+			"leaf": true,
+			"url": "Email",
+			"roleid" : 1
+		}]
+	}
+}]

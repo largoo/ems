@@ -1,0 +1,13 @@
+package com.ems.service;
+
+import com.ems.pojo.Orders;
+
+public interface IOrderService {
+
+	boolean addOrder(Orders order);
+
+	Orders getOrder(String equipid);
+
+	boolean updateOrder(Orders order);
+
+}

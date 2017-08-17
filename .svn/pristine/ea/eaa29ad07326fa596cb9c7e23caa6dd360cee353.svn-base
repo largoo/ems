@@ -1,0 +1,622 @@
+/*
+ * 设备基本信息管理
+ */
+
+App.Equip = function() {
+	return {
+		// 定义变量
+		currentFormValues : {},
+
+		// 初始化
+		render : function(id) {
+			this.loadPanel(id);
+		},
+
+
+		// 创建窗口
+
+		// 创建Grid
+		loadPanel : function(id) {
+			// 定义变量
+		var currentFormValues = {};
+		
+		var file = {};
+		
+		var search = '';
+			
+		var form = new Ext.form.FormPanel({
+			width : 1100,
+			labelWidth : 120,
+			buttonAlign : "center",
+			bodyStyle : "padding:10px;",
+			frame : true,
+			layout : "column",
+			items : [{
+				layout : 'form',
+				columnWidth : .33,
+				items : [{
+					xtype : "textfield",
+					name : "id",
+					fieldLabel : "设备名称",
+					anchor : "98%"
+				},{
+					xtype : "textfield",
+					name : "assetno",
+					fieldLabel : "固定资产编号",
+					anchor : "98%"
+				},{
+					xtype : "datefield",
+					name : "moveindate",
+					format:'Y-m-d',
+					fieldLabel : "进厂日期",
+					anchor : "98%"
+				},{
+					layout : 'column',
+					items : [{
+						columnWidth : .97,
+						layout : 'form',
+						items : [{
+							xtype : 'textfield',
+							name : 'hookupfilename',
+							fieldLabel : "二次配附档",
+							readOnly : true
+						}]
+					},{
+						xtype : 'textfield',
+						name : 'hookupfilesavename',
+						hidden : true
+					},{
+						xtype : 'textfield',
+						name : 'hookupfilepath',
+						hidden : true
+					},{
+						xtype : 'button',
+						text : '点击上传',
+						onClick : function(){
+							addFile('hookup',form.getForm().findField('id').getValue())
+						}
+					},{
+						xtype : 'button',
+						text : '清除',
+						handler : function(){
+							form.getForm().findField('hookupfilename').reset();
+							form.getForm().findField('hookupfilesavename').reset();
+							form.getForm().findField('hookupfilepath').reset();
+						}
+					}]
+				},{
+					layout : 'column',
+					items : [{
+						columnWidth : .97,
+						layout : 'form',
+						items : [{
+							xtype : 'textfield',
+							name : 'togyfilename',
+							fieldLabel : "交付工艺附档",
+							readOnly : true
+						}]
+					},{
+						xtype : 'textfield',
+						name : 'togyfilesavename',
+						hidden : true
+					},{
+						xtype : 'textfield',
+						name : 'togyfilepath',
+						hidden : true
+					},{
+						xtype : 'button',
+						text : '点击上传',
+						onClick : function(){
+							addFile('togy',form.getForm().findField('id').getValue())
+						}
+					},{
+						xtype : 'button',
+						text : '清除',
+						handler : function(){
+							form.getForm().findField('togyfilename').reset();
+							form.getForm().findField('togyfilesavename').reset();
+							form.getForm().findField('togyfilepath').reset();
+						}
+					}]
+				},{
+					layout : 'column',
+					items : [{
+						columnWidth : .97,
+						layout : 'form',
+						items : [{
+							xtype : 'textfield',
+							name : 'fatfilename',
+							fieldLabel : "设备FAT附档",
+							readOnly : true
+						}]
+					},{
+						xtype : 'textfield',
+						name : 'fatfilesavename',
+						hidden : true
+					},{
+						xtype : 'textfield',
+						name : 'fatfilepath',
+						hidden : true
+					},{
+						xtype : 'button',
+						text : '点击上传',
+						onClick : function(){
+							addFile('fat',form.getForm().findField('id').getValue())
+						}
+					},{
+						xtype : 'button',
+						text : '清除',
+						handler : function(){
+							form.getForm().findField('fatfilename').reset();
+							form.getForm().findField('fatfilesavename').reset();
+							form.getForm().findField('fatfilepath').reset();
+						}
+					}]
+				}]
+			},{
+				layout : 'form',
+				columnWidth : .33,
+				items : [{
+					xtype : "textfield",
+					name : "manu",
+					fieldLabel : "制造商名称",
+					anchor : "98%"
+				},{
+					xtype : "datefield",
+					name : "opendate",
+					format:'Y-m-d',
+					fieldLabel : "开箱日期",
+					anchor : "98%"
+				},{
+					xtype : "datefield",
+					name : "locatedate",
+					format:'Y-m-d',
+					fieldLabel : "设备定位日期",
+					anchor : "98%"
+				},{
+					xtype : "datefield",
+					name : "powerondate",
+					format:'Y-m-d',
+					fieldLabel : "设备PowerOn日期",
+					anchor : "98%"
+				},{
+					xtype : "datefield",
+					name : "toproductdate",
+					format:'Y-m-d',
+					fieldLabel : "设备交付生产日期",
+					anchor : "98%"
+				},{
+					layout : 'column',
+					items : [{
+						columnWidth : .68,
+						layout : 'form',
+						items : [{
+							xtype : "datefield",
+							name : "warrantydatestart",
+							format:'Y-m-d',
+							fieldLabel : "设备保固期",
+							anchor : "99%"
+						}]
+					},{
+						xtype : 'displayfield',
+						value : '-------'
+					},{
+						columnWidth : .32,
+						items : [{
+							xtype : "datefield",
+							name : "warrantydateend",
+							format:'Y-m-d',
+							anchor : "99%"
+						}]
+					}]
+				}]
+			},{
+				layout : 'form',
+				columnWidth : .33,
+				items : [{
+					xtype : "textfield",
+					name : "model",
+					fieldLabel : "型号",
+					anchor : "98%"
+				},{
+					layout : 'column',
+					items : [{
+						columnWidth : .97,
+						layout : 'form',
+						items : [{
+							xtype : 'textfield',
+							name : 'openfilename',
+							fieldLabel : "设备开箱附档",
+							readOnly : true
+						}]
+					},{
+						xtype : 'textfield',
+						name : 'openfilesavename',
+						hidden : true
+					},{
+						xtype : 'textfield',
+						name : 'openfilepath',
+						hidden : true
+					},{
+						xtype : 'button',
+						text : '点击上传',
+						onClick : function(){
+							addFile('open',form.getForm().findField('id').getValue())
+						}
+					},{
+						xtype : 'button',
+						text : '清除',
+						handler : function(){
+							form.getForm().findField('openfilename').reset();
+							form.getForm().findField('openfilesavename').reset();
+							form.getForm().findField('openfilepath').reset();
+						}
+					}]
+				},{
+					xtype : "datefield",
+					name : "hookupdate",
+					format:'Y-m-d',
+					fieldLabel : "设备二次配完成日期",
+					anchor : "98%"
+				},{
+					xtype : "datefield",
+					name : "togy",
+					format:'Y-m-d',
+					fieldLabel : "设备交付工艺日期",
+					anchor : "98%"
+				},{
+					xtype : "datefield",
+					name : "fatdate",
+					format:'Y-m-d',
+					fieldLabel : "设备FAT日期",
+					anchor : "98%"
+				}]
+			},{
+					xtype : 'textfield',
+					name : 'ver',
+					hidden : true
+			}],
+			buttons : [{
+						text : "确定",
+						handler : submit
+					}, {
+						text : "重置",
+						handler : function() {
+							form.getForm().reset();
+							form.getForm().setValues(currentFormValues);
+							form.getForm().clearInvalid();
+						}
+					}]
+		});	
+			
+		var win = new Ext.Window({
+						id : 'win',
+						width : 1150,
+						height : 250,
+						title : "",
+						plain : true,
+						resizable : true,
+						frame : true,
+						closeAction : "hide",
+						border : false,
+						modal : true,
+						layout : "fit",
+						items : [form],
+						listeners : {
+							render : function(fp) {
+								form.form.waitMsgTarget = fp.getEl();
+							},
+							show : function() {
+								form.form.setValues(currentFormValues);
+								form.form.clearInvalid();
+							}
+						}
+					});	
+		var store = new Ext.data.Store({
+					remoteSort : true,
+					autoLoad : true,
+					proxy : new Ext.data.HttpProxy({ // 获取数据的方式
+						method : 'POST',
+						url : '/ems/equip/getIds.do'
+					}),
+					reader : new Ext.data.JsonReader({ // 数据读取器
+						totalProperty : 'results',
+						// 记录总数
+						root : 'rows' // Json中的列表数据根节点
+					}, ['id', 'state']),
+					listeners : {
+						beforeLoad : function(store){
+							store.baseParams = {
+								start : 0,
+								limit : 20,
+								id : search
+							}
+						}
+					}
+				});
+			
+		var panel = Ext.getCmp(id);
+		panel.body.dom.innerHTML = "";
+		var sm = new Ext.grid.CheckboxSelectionModel();
+
+		var grid = new Ext.grid.GridPanel({
+					tbar : [{
+								text : "新增",
+								iconCls : "x-btn-add",
+								handler : add
+							}, "-", {
+								text : "编辑|查看设备基础信息",
+								iconCls : "x-btn-edit",
+								handler : edit
+							}, "-", {
+								text : "删除",
+								iconCls : "x-btn-del",
+								handler : del
+							}, "-", {
+								xtype : "textfield",
+								id : 'search_equip',
+								emptyText : "根据名称查询",
+								enableKeyEvents:true,
+								listeners : {
+									keyup : function(){
+										search = Ext.getCmp('search_equip').getValue();
+										store.reload()
+									}
+								}
+							}, {
+								xtype : "button",
+								text : "查询",
+								iconCls : "x-btn-search",
+								handler : function(){
+									search = Ext.getCmp('search_equip').getValue();
+									store.reload()
+								}
+							}],
+					bbar : new Ext.PagingToolbar({
+								store : store,
+								pageSize : 20,
+								displayInfo : true
+							}),
+
+					store : store,
+					sm : sm,
+					columns : [sm, {
+								header : "设备名称",
+								width : 100,
+								sortable : true,
+								dataIndex : "id"
+							},{
+								//hidden : true,
+								dataIndex : 'state',
+								width : 20,
+								header : '状态',
+								renderer : function(v){
+									if(v==0){
+										return '正常'
+									}else if(v == 1){
+										return '保养'
+									}else if(v==2){
+										return '异常'
+									}
+								}
+							}],
+
+					border : false,
+					viewConfig : {
+						forceFit : true
+					}
+				});
+		panel.add(grid);
+			
+		function submit(){
+			var fr = form.getForm(); // 获取BasicForm对象
+			if (fr.isValid()) {
+				var l = fr.getValues();
+				Ext.Ajax.request({
+					url : '/ems/equip/updateInfo.do',
+					method : 'POST',
+					params : {
+						datas : Ext.encode(l)
+					},
+					success : function(response) {
+						var o = Ext.util.JSON.decode(response.responseText);
+						if(o.success){
+							Ext.msg.msg('操作成功', o.msg);
+							win.hide();
+							store.reload();
+						}else{
+							Ext.msg.msg('操作失败', o.msg);
+						}
+					},
+					failure : function() {
+						Ext.msg.msg('error', '请联系管理员');
+					}
+				});	
+			}
+		}
+
+		function add(){
+			var form = new Ext.form.FormPanel({
+				url : '/ems/equip/addId.do',
+				method : 'POST',
+				width : 600,
+				height : 180,
+				buttonAlign : "center",
+				bodyStyle : "padding:10px;",
+				frame : true,
+				items : [{
+					xtype : 'textfield',
+					name : 'id',
+					id : 'equip_id_for_uppercase',
+					fieldLabel : '设备名称',
+					anchor : "98%",
+					allowBlank : false,
+					enableKeyEvents:true,
+					listeners : {
+						keyup : function(){
+							Ext.getCmp('equip_id_for_uppercase').setValue(Ext.getCmp('equip_id_for_uppercase').getValue().toUpperCase().replace(/\s/g, ""))
+						}
+					}
+				},{
+					xtype : 'displayfield',
+					fieldLabel : '示例',
+					value : 'ZG-YX-108-层压机#1(名称唯一)'
+				}],
+				buttons : [{
+					text : '提交',
+					onClick : function(){
+						if(form.form.isValid()){
+							form.getForm().submit({
+								waitMsg : '操作中...',
+								success : function(form, action){
+									var o = Ext.util.JSON.decode(action.response.responseText);
+									if(o.success){
+										Ext.msg.msg("操作成功", o.msg);
+										win.close();
+										store.reload();
+									}else{
+										Ext.msg.msg("操作失败", o.msg);
+									}
+								},
+								failure : function(form, action) {
+									var o = Ext.util.JSON.decode(action.response.responseText);
+									Ext.msg.msg("操作失败", o.msg);
+								}
+							})
+						}
+					}
+				}]
+			})
+			
+			var win = new Ext.Window({
+				width : 600,
+				height : 210,
+				title : "新增设备",
+				plain : true,
+				resizable : false,
+				frame : true,
+				closeAction : "close",
+				border : false,
+				modal : true,
+				layout : "fit",
+				items : [form]
+			})
+			
+			win.show();
+		}
+		
+		function edit(){
+			if (grid.getSelectionModel().hasSelection()) {
+				win.setTitle("编辑|查看设备基础信息");
+				var rec = grid.getSelectionModel().getSelected();
+				Ext.Ajax.request({
+					url : '/ems/equip/getInfo.do',
+					method : 'POST',
+					params : {
+						id : grid.getSelectionModel().getSelected().data.id
+					},
+					success : function(response) {
+						var o = Ext.util.JSON.decode(response.responseText);
+						if(o.success){
+							Ext.apply(currentFormValues, o.o);
+							alert(Ext.encode(o.o))
+							win.show();
+						}else{
+							Ext.msg.msg('拉取信息失败', o.msg);
+						}
+					},
+					failure : function() {
+						Ext.msg.msg('error', '请联系管理员');
+					}
+				});	
+			} else {
+				Ext.Msg.alert("信息", "请选择要编辑|查看的设备！");
+			}
+		}
+			
+		function del(){
+			if (grid.getSelectionModel().hasSelection()) {
+				var recs = grid.getSelectionModel().getSelections();
+				var names = "";
+				for (var i = 0; i < recs.length; i++) {
+					names += recs[i].data.name + "<br />";
+				}
+				Ext.Msg.confirm("确认", "确认删除以下库位？<br />" + names, function(btn) {
+							if (btn == "yes") {
+								store.remove(recs); // 前台删除
+								// st.reload();
+							}
+						});
+			} else {
+				Ext.Msg.alert("信息", "请选择要删除的用户！");
+			}
+		}
+			
+		function addFile(type,id){
+			var f = form;
+			var fileform = new Ext.form.FormPanel({
+				url : '/ems/file/upload.do?F_FileType='+type+'&F_FileOfId='+encodeURIComponent(id),
+				method : 'POST',
+				width : 600,
+				fileUpload: true,
+				frame : true,
+				height : 200,
+				buttonAlign : "center",
+				layout : 'column',
+				items : [{
+					xtype : 'textfield',
+					name : 'fileupload',
+					inputType : 'file',
+					fieldLabel : '文件上传'
+				}],
+				buttons : [{
+					text : '提交',
+					onClick : function(){
+						fileform.getForm().submit({
+							waitMsg : 'uploading...',
+							success : function(form,action){
+								var o = Ext.util.JSON.decode(action.response.responseText);
+								if(type == 'hookup'){
+									f.getForm().findField('hookupfilename').setValue(o.o.name)
+									f.getForm().findField('hookupfilesavename').setValue(o.o.savename);
+									f.getForm().findField('hookupfilepath').setValue(o.o.path);
+								}else if(type == 'togy'){
+									f.getForm().findField('togyfilename').setValue(o.o.name)
+									f.getForm().findField('togyfilesavename').setValue(o.o.savename);
+									f.getForm().findField('togyfilepath').setValue(o.o.path);
+								}else if(type == 'fat'){
+									f.getForm().findField('fatfilename').setValue(o.o.name)
+									f.getForm().findField('fatfilesavename').setValue(o.o.savename);
+									f.getForm().findField('fatfilepath').setValue(o.o.path);
+								}else if(type == 'open'){
+									f.getForm().findField('openfilename').setValue(o.o.name)
+									f.getForm().findField('openfilesavename').setValue(o.o.savename);
+									f.getForm().findField('openfilepath').setValue(o.o.path);
+								}
+								filewin.close();
+							}
+						})
+					}
+				}]
+			})
+			
+			var filewin = new Ext.Window({
+				width : 600,
+				height : 210,
+				title : "文件上传",
+				plain : true,
+				resizable : false,
+				frame : true,
+				closeAction : "close",
+				border : false,
+				modal : true,
+				layout : "fit",
+				items : [fileform]
+			})
+			
+			filewin.show();
+			
+		}
+		}
+	}
+}();

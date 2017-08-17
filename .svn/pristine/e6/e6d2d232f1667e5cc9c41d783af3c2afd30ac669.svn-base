@@ -1,0 +1,24 @@
+package com.ems.service.impl;
+
+import java.util.List;
+
+import javax.annotation.Resource;
+
+import org.springframework.stereotype.Service;
+
+import com.ems.dao.EquipMapper;
+import com.ems.pojo.Equip;
+import com.ems.service.IEquipService;
+
+@Service
+public class EquipServiceImpl implements IEquipService{
+
+	@Resource
+	private EquipMapper dao;
+	
+	@Override
+	public List<Equip> getIds(Equip equip) {
+		return dao.getIds(equip);
+	}
+
+}

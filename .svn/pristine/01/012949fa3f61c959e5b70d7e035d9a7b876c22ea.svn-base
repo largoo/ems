@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ems.dao.EmailMapper" >
+  <resultMap id="BaseResultMap" type="com.ems.pojo.Email" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="account" property="account" jdbcType="VARCHAR" />
+    <result column="password" property="password" jdbcType="VARCHAR" />
+    <result column="type" property="type" jdbcType="VARCHAR" />
+    <result column="smtp" property="smtp" jdbcType="VARCHAR" />
+    <result column="del" property="del" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, account, password, type, smtp, del
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from email
+    where id = #{id,jdbcType=INTEGER} and del = 0
+  </select>
+  <select id="hasAccount" resultType="java.lang.Integer" parameterType="com.ems.pojo.Email" >
+    select count(id)
+    from email
+    where account = #{account,jdbcType=VARCHAR} and del = 0
+    <if test="id != null and id != ''">
+    	and id not in (#{id,jdbcType=INTEGER})
+    </if>
+  </select>
+  <select id="hasSender" resultType="java.lang.Integer" >
+    select count(id)
+    from email
+    where type = 0 and del = 0
+  </select>
+  <select id="getTotal" resultType="java.lang.Integer">
+    select count(id) from email where del = 0
+  </select>
+  <select id="getAll" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from email where del = 0
+  </select>
+  <delete id="deleteByPrimaryKey" >
+    update email set del = 1
+    where id in
+    <foreach collection="array" index="index" item="item"
+  		open = " (" separator = "," close = ")">
+  		#{item}
+  	</foreach>
+  </delete>
+  <insert id="insert" parameterType="com.ems.pojo.Email" >
+    insert into email (id, account, password, 
+      type, smtp, del)
+    values (#{id,jdbcType=INTEGER}, #{account,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}, 
+      #{type,jdbcType=VARCHAR}, #{smtp,jdbcType=VARCHAR}, #{del,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="com.ems.pojo.Email" >
+    insert into email
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="account != null and account != ''" >
+        account,
+      </if>
+      <if test="password != null and password != ''" >
+        password,
+      </if>
+      <if test="type != null and type != ''" >
+        type,
+      </if>
+      <if test="smtp != null and smtp != ''" >
+        smtp,
+      </if>
+      <if test="del != null and del != ''" >
+        del,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="account != null and account != ''" >
+        #{account,jdbcType=VARCHAR},
+      </if>
+      <if test="password != null and password != ''" >
+        #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null and type != ''" >
+        #{type,jdbcType=VARCHAR},
+      </if>
+      <if test="smtp != null and smtp != ''" >
+        #{smtp,jdbcType=VARCHAR},
+      </if>
+      <if test="del != null and del != ''" >
+        #{del,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.ems.pojo.Email" >
+    update email
+    <set >
+        account = #{account,jdbcType=VARCHAR},
+        type = #{type,jdbcType=VARCHAR},
+        <choose>
+        	<when test="password == null or password == ''">
+        		password = null,
+        	</when>
+        	<otherwise>
+        		password = #{password,jdbcType=VARCHAR},
+        	</otherwise>
+        </choose>
+        <choose>
+        	<when test="smtp == null or smtp == ''">
+        		smtp = null,
+        	</when>
+        	<otherwise>
+        		smtp = #{smtp,jdbcType=VARCHAR},
+        	</otherwise>
+        </choose>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.ems.pojo.Email" >
+    update email
+    set account = #{account,jdbcType=VARCHAR},
+      password = #{password,jdbcType=VARCHAR},
+      type = #{type,jdbcType=VARCHAR},
+      smtp = #{smtp,jdbcType=VARCHAR},
+      del = #{del,jdbcType=INTEGER}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

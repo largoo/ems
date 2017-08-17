@@ -1,0 +1,391 @@
+/*
+ * 设备基本信息管理
+ */
+
+App.Equip = function() {
+	return {
+		// 定义变量
+		currentFormValues : {},
+
+		// 初始化
+		render : function(id) {
+			this.loadPanel(id);
+		},
+
+
+		// 创建窗口
+
+		// 创建Grid
+		loadPanel : function(id) {
+			// 定义变量
+		var currentFormValues = {};
+		
+		var file = {};
+		
+		var search;
+			
+		var form = new Ext.form.FormPanel({
+						labelWidth : 40,
+						buttonAlign : "center",
+						bodyStyle : "padding:10px;",
+						frame : true,
+						defaults : {
+							layout : "form"
+						},
+						items : [{
+							xtype : "hidden",
+							name : "id",
+							value : ""
+						}, {
+							xtype : "hidden",
+							name : "action",
+							value : ""
+						}, {
+							xtype : "textfield",
+							name : "name",
+							fieldLabel : "库位",
+							tabIndex : 1,
+							anchor : "98%",
+							allowBlank : false
+						},{
+							layout : 'column',
+							items : [{
+								columnWidth : .8,
+								xtype : "textfield",
+								name : "file1",
+								fieldLabel : "file1",
+								editable : false
+							},{
+								xtype : 'textfield',
+								hidden : true,
+								name : 'filepath1'
+							},{
+								columnWidth : .15,
+								xtype : 'button',
+								text : '选择文件',
+								onClick : function(){
+									addFile(1)
+								}
+							}]
+						},{
+							layout : 'column',
+							items : [{
+								columnWidth : .8,
+								xtype : "textfield",
+								name : "file2",
+								fieldLabel : "file2",
+								editable : false
+							},{
+								xtype : 'textfield',
+								hidden : true,
+								name : 'filepath2'
+							},{
+								columnWidth : .15,
+								xtype : 'button',
+								text : '选择文件',
+								onClick : function(){
+									addFile(2)
+								}
+							}]
+						},{
+							layout : 'column',
+							items : [{
+								columnWidth : .8,
+								xtype : "textfield",
+								name : "file3",
+								fieldLabel : "file3",
+								editable : false
+							},{
+								xtype : 'textfield',
+								hidden : true,
+								name : 'filepath3'
+							},{
+								columnWidth : .15,
+								xtype : 'button',
+								text : '选择文件',
+								onClick : function(){
+									addFile(3)
+								}
+							}]
+						},{
+							layout : 'column',
+							items : [{
+								columnWidth : .8,
+								xtype : "textfield",
+								name : "file4",
+								fieldLabel : "file4",
+								editable : false
+							},{
+								xtype : 'textfield',
+								hidden : true,
+								name : 'filepath4'
+							},{
+								columnWidth : .15,
+								xtype : 'button',
+								text : '选择文件',
+								onClick : function(){
+									addFile(4)
+								}
+							}]
+						},{
+							layout : 'column',
+							items : [{
+								columnWidth : .8,
+								xtype : "textfield",
+								name : "file5",
+								fieldLabel : "file5",
+								editable : false
+							},{
+								xtype : 'textfield',
+								hidden : true,
+								name : 'filepath5'
+							},{
+								columnWidth : .15,
+								xtype : 'button',
+								text : '选择文件',
+								onClick : function(){
+									addFile(5)
+								}
+							}]
+						}],
+						buttons : [{
+									text : "确定",
+									handler : submit
+								}, {
+									text : "重置",
+									handler : function() {
+										form.getForm().reset();
+										form.getForm().setValues(currentFormValues);
+										form.getForm().clearInvalid();
+									}
+								}]
+					});	
+			
+		var win = new Ext.Window({
+						id : 'win',
+						width : 600,
+						height : 250,
+						title : "",
+						plain : true,
+						resizable : false,
+						frame : true,
+						closeAction : "hide",
+						border : false,
+						modal : true,
+						layout : "fit",
+						items : [form],
+						listeners : {
+							render : function(fp) {
+								form.form.waitMsgTarget = fp.getEl();
+							},
+							show : function() {
+								form.form.setValues(currentFormValues);
+								form.form.clearInvalid();
+							}
+						}
+					});	
+		var store = new Ext.data.Store({
+					remoteSort : true,
+					autoLoad : true,
+					proxy : new Ext.data.HttpProxy({ // 获取数据的方式
+						method : 'POST',
+						url : '/ems/equip/getIds.do'
+					}),
+					reader : new Ext.data.JsonReader({ // 数据读取器
+						totalProperty : 'results',
+						// 记录总数
+						root : 'rows' // Json中的列表数据根节点
+					}, ['id', 'state']),
+					listeners : {
+						beforeLoad : function(store){
+							store.baseParams = {
+								start : 0,
+								limit : 20,
+								id : search
+							}
+						}
+					}
+				});
+			
+		var panel = Ext.getCmp(id);
+		panel.body.dom.innerHTML = "";
+		var sm = new Ext.grid.CheckboxSelectionModel();
+
+		var grid = new Ext.grid.GridPanel({
+					tbar : [{
+								text : "新增",
+								iconCls : "x-btn-add",
+								handler : add
+							}, "-", {
+								text : "编辑",
+								iconCls : "x-btn-edit",
+								handler : edit
+							}, "-", {
+								text : "删除",
+								iconCls : "x-btn-del",
+								handler : del
+							}, "-", {
+								xtype : "textfield",
+								id : 'search_equip',
+								emptyText : "根据名称查询",
+									enableKeyEvents:true,
+									listeners : {
+										keyup : function(){
+											search = Ext.getCmp('search_equip').getValue();
+											store.reload()
+										}
+									}
+							}, {
+								xtype : "button",
+								text : "查询",
+								iconCls : "x-btn-search",
+								handler : function(){
+									search = Ext.getCmp('search_equip').getValue();
+									store.reload()
+								}
+							}],
+					bbar : new Ext.PagingToolbar({
+								store : store,
+								pageSize : 20,
+								displayInfo : true
+							}),
+
+					store : store,
+					sm : sm,
+					columns : [sm, {
+								header : "设备名称",
+								width : 100,
+								sortable : true,
+								dataIndex : "id"
+							},{
+								hidden : true,
+								dataIndex : 'state'
+							}],
+
+					border : false,
+					viewConfig : {
+						forceFit : true
+					}
+				});
+		panel.add(grid);
+			
+		function submit(){
+			var fr = form.getForm(); // 获取BasicForm对象
+			if (fr.isValid()) {
+				var l = fr.getValues();
+				Ext.Ajax.request({
+					url : '/ems/location/'+l.action + '.do',
+					method : 'POST',
+					params : {
+						datas : Ext.encode(l)
+					},
+					success : function(response) {
+						var o = Ext.util.JSON.decode(response.responseText);
+						if(o.success){
+							Ext.msg.msg('操作成功', o.msg);
+							win.hide();
+							store.reload();
+						}else{
+							Ext.msg.msg('操作失败', o.msg);
+						}
+					},
+					failure : function() {
+						Ext.msg.msg('error', '请联系管理员');
+					}
+				});	
+			}
+		}
+
+		function add(){
+			win.setTitle("新增库位");
+			Ext.apply(currentFormValues, {
+						id : "",
+						name : "",
+						action : 'add'
+					});
+			win.show();
+		}
+		
+		function edit(){
+			if (grid.getSelectionModel().hasSelection()) {
+				win.setTitle("编辑库位");
+				var rec = grid.getSelectionModel().getSelected();
+				Ext.apply(currentFormValues, {
+							id : rec.data.id,
+							name : rec.data.name,
+							action : 'update'
+						});
+				win.show();
+			} else {
+				Ext.Msg.alert("信息", "请选择要编辑的库位！");
+			}
+		}
+			
+		function del(){
+			if (grid.getSelectionModel().hasSelection()) {
+				var recs = grid.getSelectionModel().getSelections();
+				var names = "";
+				for (var i = 0; i < recs.length; i++) {
+					names += recs[i].data.name + "<br />";
+				}
+				Ext.Msg.confirm("确认", "确认删除以下库位？<br />" + names, function(btn) {
+							if (btn == "yes") {
+								store.remove(recs); // 前台删除
+								// st.reload();
+							}
+						});
+			} else {
+				Ext.Msg.alert("信息", "请选择要删除的用户！");
+			}
+		}
+			
+		function addFile(type){
+			var f = form;
+			var fileform = new Ext.form.FormPanel({
+				url : '/ems/file/upload.do',
+				method : 'POST',
+				width : 600,
+				fileUpload: true,
+				height : 200,
+				buttonAlign : "center",
+				layout : 'column',
+				items : [{
+					xtype : 'textfield',
+					name : 'fileupload',
+					inputType : 'file',
+					fieldLabel : '文件上传'
+				}],
+				buttons : [{
+					text : '提交',
+					onClick : function(){
+						fileform.getForm().submit({
+							waitMsg : 'uploading...',
+							success : function(response){
+							var o = Ext.util.JSON.decode(response.responseText);
+							
+							}
+						})
+					}
+				}]
+			})
+			
+			var filewin = new Ext.Window({
+				width : 600,
+				height : 210,
+				title : "文件上传",
+				plain : true,
+				resizable : false,
+				frame : true,
+				closeAction : "close",
+				border : false,
+				modal : true,
+				layout : "fit",
+				items : [fileform]
+			})
+			
+			filewin.show();
+			
+		}
+		}
+	}
+}();

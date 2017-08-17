@@ -1,0 +1,38 @@
+package com.ems.controller;
+
+import java.util.List;
+
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.ems.pojo.Equip;
+import com.ems.pojo.ExtGridReturn;
+import com.ems.pojo.ExtPager;
+import com.ems.service.IEquipService;
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
+
+@Controller
+@RequestMapping("/equip")
+public class EquipController {
+
+	@Resource
+	private IEquipService service;
+	
+	@RequestMapping(value="getIds", method=RequestMethod.POST)
+	@ResponseBody
+	public ExtGridReturn getIds(ExtPager pager, HttpServletRequest request){
+		String id = request.getParameter("id");
+		Equip e = new Equip();
+		if(id == null || id.trim().equals(""))
+			e.setId(id);
+		Page<?> page = PageHelper.startPage(pager.getStart()/pager.getLimit()+1, pager.getLimit());
+		List<Equip> rows = this.service.getIds(e);
+		return new ExtGridReturn((int)page.getTotal(), rows);
+	}
+}

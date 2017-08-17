@@ -1,0 +1,30 @@
+[{
+	"title": "组件设备履历系统",
+	"root": {
+		"children": [{
+			"text": "设备基本信息管理",
+			"leaf": true,
+			"url": "Equip",
+			"roleid" : 1
+		},{
+			"text": "设备工单",
+			"leaf": true,
+			"url": "Order"
+		}]
+	}
+}, {
+	"title": "信息维护",
+	"root": {
+		"children": [{
+			"text": "用户管理",
+			"leaf": true,
+			"url": "User",
+			"roleid" : 2
+		},{
+			"text": "邮件通知维护",
+			"leaf": true,
+			"url": "Email",
+			"roleid" : 1
+		}]
+	}
+}]

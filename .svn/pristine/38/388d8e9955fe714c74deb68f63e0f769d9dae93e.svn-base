@@ -1,0 +1,18 @@
+package com.ems.service;
+
+import java.util.List;
+
+import com.ems.pojo.Equip;
+
+public interface IEquipService {
+
+	List<Equip> getIds(Equip equip);
+
+	boolean checkId(String id);
+
+	boolean addId(Equip equip);
+
+	Equip getInfo(String id);
+
+	boolean updateInfo(Equip equip);
+}
