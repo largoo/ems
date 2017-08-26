@@ -17,11 +17,11 @@ App.Tree = function() {
 				collapsible : true,
 				enableDD : true,
 				enableDrag : true,
-				rootVisible : true,
+				rootVisible : false,
 				autoScroll : true,
 				autoHeight : true,
 				lines : true,
-				loader : new Ext.tree.TreeLoader({dataUrl : '/ems/equip/getTree.do'}),
+				loader : new Ext.tree.TreeLoader({dataUrl : '/ems/tree/getTree.do'}),
 				root : new Ext.tree.AsyncTreeNode({id:'root',text:'目录',expanded:true})
 			})
 			

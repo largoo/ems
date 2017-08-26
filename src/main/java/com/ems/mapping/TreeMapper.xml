@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ems.dao.TreeMapper" >
+  <resultMap id="BaseResultMap" type="com.ems.pojo.Tree" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="pid" property="pid" jdbcType="INTEGER" />
+    <result column="eid" property="eid" jdbcType="INTEGER" />
+    <result column="leaf" property="leaf" jdbcType="BIT" />
+    <result column="text" property="text" jdbcType="VARCHAR" />
+    <result column="del" property="del" jdbcType="INTEGER" />
+    <result column="ver" property="ver" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, pid, eid, leaf, text, del, ver
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from tree
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from tree
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.ems.pojo.Tree" >
+    insert into tree (id, pid, eid, 
+      leaf, text, del, ver
+      )
+    values (#{id,jdbcType=INTEGER}, #{pid,jdbcType=INTEGER}, #{eid,jdbcType=INTEGER}, 
+      #{leaf,jdbcType=BIT}, #{text,jdbcType=VARCHAR}, #{del,jdbcType=INTEGER}, #{ver,jdbcType=INTEGER}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.ems.pojo.Tree" >
+    insert into tree
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="pid != null" >
+        pid,
+      </if>
+      <if test="eid != null" >
+        eid,
+      </if>
+      <if test="leaf != null" >
+        leaf,
+      </if>
+      <if test="text != null" >
+        text,
+      </if>
+      <if test="del != null" >
+        del,
+      </if>
+      <if test="ver != null" >
+        ver,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="pid != null" >
+        #{pid,jdbcType=INTEGER},
+      </if>
+      <if test="eid != null" >
+        #{eid,jdbcType=INTEGER},
+      </if>
+      <if test="leaf != null" >
+        #{leaf,jdbcType=BIT},
+      </if>
+      <if test="text != null" >
+        #{text,jdbcType=VARCHAR},
+      </if>
+      <if test="del != null" >
+        #{del,jdbcType=INTEGER},
+      </if>
+      <if test="ver != null" >
+        #{ver,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.ems.pojo.Tree" >
+    update tree
+    <set >
+      <if test="pid != null" >
+        pid = #{pid,jdbcType=INTEGER},
+      </if>
+      <if test="eid != null" >
+        eid = #{eid,jdbcType=INTEGER},
+      </if>
+      <if test="leaf != null" >
+        leaf = #{leaf,jdbcType=BIT},
+      </if>
+      <if test="text != null" >
+        text = #{text,jdbcType=VARCHAR},
+      </if>
+      <if test="del != null" >
+        del = #{del,jdbcType=INTEGER},
+      </if>
+      <if test="ver != null" >
+        ver = #{ver,jdbcType=INTEGER},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.ems.pojo.Tree" >
+    update tree
+    set pid = #{pid,jdbcType=INTEGER},
+      eid = #{eid,jdbcType=INTEGER},
+      leaf = #{leaf,jdbcType=BIT},
+      text = #{text,jdbcType=VARCHAR},
+      del = #{del,jdbcType=INTEGER},
+      ver = #{ver,jdbcType=INTEGER}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+
+  <select id="getRoots" resultMap="BaseResultMap">
+  	select * from tree where pid is null and del = 0
+  </select>
+
+  <select id="getChildren" resultMap="BaseResultMap">
+  	select * from tree where pid = #{id, jdbcType=INTEGER} and del = 0
+  </select>
+
+</mapper>

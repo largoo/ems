@@ -2,7 +2,8 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.ems.dao.EquipMapper" >
   <resultMap id="BaseResultMap" type="com.ems.pojo.Equip" >
-    <id column="id" property="id" jdbcType="VARCHAR" />
+    <id column="eid" property="eid" jdbcType="INTEGER" />
+    <result column="id" property="id" jdbcType="VARCHAR" />
     <result column="idver" property="idver" jdbcType="INTEGER" />
     <result column="manu" property="manu" jdbcType="VARCHAR" />
     <result column="model" property="model" jdbcType="VARCHAR" />
@@ -39,23 +40,23 @@
     <result column="lockdate" property="lockdate" jdbcType="VARCHAR" />
     <result column="state" property="state" jdbcType="INTEGER" />
     <result column="sver" property="sver" jdbcType="INTEGER" />
-    <result column="equipcol0" property="equipcol0" jdbcType="VARCHAR" />
     <result column="equipcol1" property="equipcol1" jdbcType="VARCHAR" />
     <result column="equipcol2" property="equipcol2" jdbcType="VARCHAR" />
     <result column="equipcol3" property="equipcol3" jdbcType="VARCHAR" />
     <result column="equipcol4" property="equipcol4" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
-    id, idver, manu, model, assetno, opendate, openfilename, openfilesavename, openfilepath, 
+    eid, id, idver, manu, model, assetno, opendate, openfilename, openfilesavename, openfilepath, 
     moveindate, locatedate, hookupdate, hookupfilename, hookupfilesavename, hookupfilepath, 
     powerondate, togy, togyfilename, togyfilesavename, togyfilepath, toproductdate, fatdate, 
     fatfilename, fatfilesavename, fatfilepath, warrantydatestart, warrantydateend, linetype, 
-    ver, del, createuserid, createtime, islock, lockuserid, lockdate, state, sver, equipcol0, 
+    ver, del, createuserid, createtime, islock, lockuserid, lockdate, state, sver,  
     equipcol1, equipcol2, equipcol3, equipcol4
   </sql>
   
   <resultMap id="idsMap" type="com.ems.pojo.Equip">
-  	<id column="id" property="id" jdbcType="VARCHAR" />
+  	<id column="eid" property="eid" jdbcType="INTEGER" />
+  	<result column="id" property="id" jdbcType="VARCHAR" />
   	<result column="state" property="state" jdbcType="INTEGER" />
   	<result column="sver" property="sver" jdbcType="INTEGER" />
   	<result column="idver" property="idver" jdbcType="INTEGER" />
@@ -63,7 +64,7 @@
   </resultMap>
   
   <select id="getIds" resultMap="idsMap" parameterType="com.ems.pojo.Equip" >
-  	select id, state, sver, idver,islock from equip where del = 0
+  	select eid, id, state, sver, idver,islock from equip where del = 0
   	<if test="id !=null and id != ''">
   		and id like '%${id}%'
   	</if>
@@ -188,14 +189,6 @@
   	update equip set state = 0,sver=sver+1 where id = #{0}
   </update>
   
-  
-  
-  
-  
-  
-  
-  
-  
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
     select 
     <include refid="Base_Column_List" />
@@ -316,9 +309,6 @@
       </if>
       <if test="sver != null" >
         sver,
-      </if>
-      <if test="equipcol0 != null" >
-        equipcol0,
       </if>
       <if test="equipcol1 != null" >
         equipcol1,
@@ -442,9 +432,6 @@
       <if test="sver != null" >
         #{sver,jdbcType=INTEGER},
       </if>
-      <if test="equipcol0 != null" >
-        #{equipcol0,jdbcType=VARCHAR},
-      </if>
       <if test="equipcol1 != null" >
         #{equipcol1,jdbcType=VARCHAR},
       </if>
@@ -567,9 +554,6 @@
       <if test="sver != null" >
         sver = #{sver,jdbcType=INTEGER},
       </if>
-      <if test="equipcol0 != null" >
-        equipcol0 = #{equipcol0,jdbcType=VARCHAR},
-      </if>
       <if test="equipcol1 != null" >
         equipcol1 = #{equipcol1,jdbcType=VARCHAR},
       </if>
@@ -622,7 +606,6 @@
       lockdate = #{lockdate,jdbcType=VARCHAR},
       state = #{state,jdbcType=INTEGER},
       sver = #{sver,jdbcType=INTEGER},
-      equipcol0 = #{equipcol0,jdbcType=VARCHAR},
       equipcol1 = #{equipcol1,jdbcType=VARCHAR},
       equipcol2 = #{equipcol2,jdbcType=VARCHAR},
       equipcol3 = #{equipcol3,jdbcType=VARCHAR},

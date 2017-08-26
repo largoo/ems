@@ -77,7 +77,7 @@ public class Equip {
 
     private Integer sver;
 
-    private String equipcol0;
+    private Integer eid;
 
     private String equipcol1;
 
@@ -86,6 +86,14 @@ public class Equip {
     private String equipcol3;
 
     private String equipcol4;
+
+	public Integer getEid() {
+		return eid;
+	}
+
+	public void setEid(Integer eid) {
+		this.eid = eid;
+	}
 
 	public Integer getIdver() {
 		return idver;
@@ -381,14 +389,6 @@ public class Equip {
 
 	public void setSver(Integer sver) {
 		this.sver = sver;
-	}
-
-	public String getEquipcol0() {
-		return equipcol0;
-	}
-
-	public void setEquipcol0(String equipcol0) {
-		this.equipcol0 = equipcol0;
 	}
 
 	public String getEquipcol1() {
