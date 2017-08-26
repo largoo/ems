@@ -46,9 +46,11 @@ App.Equip = function() {
 			
 		var panel = Ext.getCmp(id);
 		panel.body.dom.innerHTML = "";
+		
 		var sm = new Ext.grid.CheckboxSelectionModel({singleSelect : true});
 
 		var grid = new Ext.grid.GridPanel({
+					region : 'center',
 					tbar : [{
 								text : "新增设备",
 								iconCls : "x-btn-add",
@@ -766,7 +768,7 @@ App.Equip = function() {
 						}
 					});	
 			
-		panel.add(grid);
+		//panel.add(grid);
 			
 		function submit(){
 			var fr = form.getForm(); // 获取BasicForm对象
@@ -1370,6 +1372,54 @@ App.Equip = function() {
 			filewin.show();
 			
 		}
+		
+		var tree = new Ext.tree.TreePanel({
+			region : 'west',
+			//title : '树',
+			width : 300,
+			frame : true,
+			animate : true,
+			collapsible : true,
+			enableDD : true,
+			enableDrag : true,
+			rootVisible : true,
+			autoScroll : true,
+			autoHeight : true,
+			lines : true,
+			loader : new Ext.tree.TreeLoader({dataUrl : '/ems/tree/getTree.do'}),
+			root : new Ext.tree.AsyncTreeNode({id:'root',text:'设备目录',expanded:true}),
+			listeners : {
+				'contextmenu' : function(node,e){
+					var menu = new Ext.menu.Menu({
+						items : [{
+							text : '添加',
+							handler : function(){
+								alert(node.attributes.id)
+							}
+						},{
+							text : '修改',
+							handler : function(){
+								alert(node.attributes.id)
+							}
+						}]
+					})
+					menu.showAt(e.getPoint());
+				}
+			}
+		});
+		
+		
+		
+		
+		
+		
+		var p = new Ext.Panel({
+			layout : 'border',
+			items : [tree,grid]
+		});
+		
+		panel.add(p)
+		
 		}
 	}
 }();
