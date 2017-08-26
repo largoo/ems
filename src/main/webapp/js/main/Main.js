@@ -5,6 +5,7 @@
 Ext.ns("App");
 
 App.initMain = function() {
+	Ext.BLANK_IMAGE_URL = '/ems/extjs/resources/images/default/s.gif';
 	Ext.QuickTips.init();
 	Ext.Msg.minWidth = 300;
 	App.createViewport();

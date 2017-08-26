@@ -31,6 +31,7 @@ App.LoginWin = function() {
 		},
 
 		getForm : function() {
+			var _this = this;
 			var form = new Ext.form.FormPanel({
 				labelWidth : 70,
 				buttonAlign : "center",
@@ -48,7 +49,14 @@ App.LoginWin = function() {
 				}, {
 					inputType : "password",
 					name : "password",
-					fieldLabel : "密码"
+					fieldLabel : "密码",
+		            listeners : {  
+		                specialkey : function(field, e) {  
+		                    if (e.getKey() == Ext.EventObject.ENTER) {  
+		                        _this.submit();
+		                    }  
+		                }  
+		            }  
 				}],
 				buttons : [{
 					text : "登录",

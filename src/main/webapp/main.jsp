@@ -32,7 +32,7 @@
 		-->
 		
 		<div id="footer">
-			<p id="copyright">Copyright &copy; 2017 东方环晟 组件事业部</p>
+			<p id="copyright">Copyright &copy; 2017 东方环晟 组件事业部</p>
 		</div>
 
 	</body>

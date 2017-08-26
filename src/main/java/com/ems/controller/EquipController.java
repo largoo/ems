@@ -106,4 +106,13 @@ public class EquipController {
 		boolean boo = this.service.lock(id,user.getId());
 		return new ExtReturn(boo, boo ? "操作成功" : "操作失败");
 	}
+	
+	@RequestMapping(value="getTree", method=RequestMethod.POST)
+	@ResponseBody
+	public Object getTree(HttpServletRequest request){
+		User user = JSON.parseObject(request.getSession().getAttribute("user").toString(), User.class);
+		String id = request.getParameter("id");
+		boolean boo = this.service.lock(id,user.getId());
+		return new ExtReturn(boo, boo ? "操作成功" : "操作失败");
+	}
 }
