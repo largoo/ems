@@ -1373,6 +1373,8 @@ App.Equip = function() {
 			
 		}
 		
+		
+		
 		var tree = new Ext.tree.TreePanel({
 			region : 'west',
 			//title : '树',
@@ -1401,6 +1403,12 @@ App.Equip = function() {
 							handler : function(){
 								alert(node.attributes.id)
 							}
+						},{
+							text : '刷新',
+							handler : function(){
+								tree.getRootNode().reload();
+								tree.expandAll();
+							}
 						}]
 					})
 					menu.showAt(e.getPoint());
@@ -1408,10 +1416,7 @@ App.Equip = function() {
 			}
 		});
 		
-		
-		
-		
-		
+		tree.expandAll();
 		
 		var p = new Ext.Panel({
 			layout : 'border',
