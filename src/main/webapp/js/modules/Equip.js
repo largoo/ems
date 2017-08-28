@@ -1396,7 +1396,7 @@ App.Equip = function() {
 						items : [{
 							text : '添加',
 							handler : function(){
-								alert(node.attributes.id)
+								optTree(node,'add')
 							}
 						},{
 							text : '修改',
@@ -1415,6 +1415,87 @@ App.Equip = function() {
 				}
 			}
 		});
+		
+		optTree = function(node,action){
+			var form = new Ext.form.FormPanel({
+				url : '/ems/tree/optTree.do',
+				method : 'POST',
+				width : 600,
+				height : 180,
+				buttonAlign : "center",
+				bodyStyle : "padding:10px;",
+				frame : true,
+				items : [{
+					xtype : 'textfield',
+					name : 'id',
+					id : 'equip_id_for_uppercase',
+					fieldLabel : '设备名称',
+					anchor : "98%",
+					allowBlank : false,
+					enableKeyEvents:true,
+					listeners : {
+						keyup : function(){
+							Ext.getCmp('equip_id_for_uppercase').setValue(Ext.getCmp('equip_id_for_uppercase').getValue().toUpperCase().replace(/\s/g, ""))
+						}
+					}
+				},{
+					xtype : 'displayfield',
+					fieldLabel : '示例',
+					value : 'ZG-YX-108-层压机#1(名称唯一)'
+				}],
+				buttons : [{
+					text : '提交',
+					onClick : function(){
+						if(form.form.isValid()){
+							form.getForm().submit({
+								waitMsg : '操作中...',
+								success : function(form, action){
+									var o = Ext.util.JSON.decode(action.response.responseText);
+									if(o.success){
+										Ext.msg.msg("操作成功", o.msg);
+										win.close();
+										store.reload();
+									}else{
+										Ext.msg.msg("操作失败", o.msg);
+									}
+								},
+								failure : function(form, action) {
+									var o = Ext.util.JSON.decode(action.response.responseText);
+									Ext.msg.msg("操作失败", o.msg);
+								}
+							})
+						}
+					}
+				}]
+			});
+
+			var win = new Ext.Window({
+				width : 600,
+				height : 210,
+				title : "新增设备",
+				plain : true,
+				resizable : false,
+				frame : true,
+				closeAction : "close",
+				border : false,
+				modal : true,
+				layout : "fit",
+				items : [form]
+			});
+			
+			win.show();
+			
+			
+			
+			
+		}
+		
+		
+		
+		
+		
+		
+		
 		
 		tree.expandAll();
 		
