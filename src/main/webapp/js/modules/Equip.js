@@ -559,10 +559,10 @@ App.Equip = function() {
 						xtype : 'button',
 						text : '下载',
 						handler : function(){
-							window.location.href = "/ems/file/download.do?id="+encodeURIComponent(form.getForm().findField('id').getValue())
-							+"&name="+encodeURIComponent(form.getForm().findField('hookupfilename').getValue())
-							+"&savename="+encodeURIComponent(form.getForm().findField('hookupfilesavename').getValue())
-							+"&path="+encodeURIComponent(form.getForm().findField('hookupfilepath').getValue())
+							window.location.href = "/ems/file/download.do?id="+encodeURIComponent(viewform.getForm().findField('id').getValue())
+							+"&name="+encodeURIComponent(viewform.getForm().findField('hookupfilename').getValue())
+							+"&savename="+encodeURIComponent(viewform.getForm().findField('hookupfilesavename').getValue())
+							+"&path="+encodeURIComponent(viewform.getForm().findField('hookupfilepath').getValue())
 						}
 					}]
 				},{
@@ -587,10 +587,10 @@ App.Equip = function() {
 						xtype : 'button',
 						text : '下载',
 						handler : function(){
-							window.location.href = "/ems/file/download.do?id="+encodeURIComponent(form.getForm().findField('id').getValue())
-							+"&name="+encodeURIComponent(form.getForm().findField('togyfilename').getValue())
-							+"&savename="+encodeURIComponent(form.getForm().findField('togyfilesavename').getValue())
-							+"&path="+encodeURIComponent(form.getForm().findField('togyfilepath').getValue())
+							window.location.href = "/ems/file/download.do?id="+encodeURIComponent(viewform.getForm().findField('id').getValue())
+							+"&name="+encodeURIComponent(viewform.getForm().findField('togyfilename').getValue())
+							+"&savename="+encodeURIComponent(viewform.getForm().findField('togyfilesavename').getValue())
+							+"&path="+encodeURIComponent(viewform.getForm().findField('togyfilepath').getValue())
 						}
 					}]
 				},{
@@ -615,10 +615,10 @@ App.Equip = function() {
 						xtype : 'button',
 						text : '下载',
 						handler : function(){
-							window.location.href = "/ems/file/download.do?id="+encodeURIComponent(form.getForm().findField('id').getValue())
-							+"&name="+encodeURIComponent(form.getForm().findField('fatfilename').getValue())
-							+"&savename="+encodeURIComponent(form.getForm().findField('fatfilesavename').getValue())
-							+"&path="+encodeURIComponent(form.getForm().findField('fatfilepath').getValue())
+							window.location.href = "/ems/file/download.do?id="+encodeURIComponent(viewform.getForm().findField('id').getValue())
+							+"&name="+encodeURIComponent(viewform.getForm().findField('fatfilename').getValue())
+							+"&savename="+encodeURIComponent(viewform.getForm().findField('fatfilesavename').getValue())
+							+"&path="+encodeURIComponent(viewform.getForm().findField('fatfilepath').getValue())
 						}
 					}]
 				}]
@@ -715,10 +715,10 @@ App.Equip = function() {
 						xtype : 'button',
 						text : '下载',
 						handler : function(){
-							window.location.href = "/ems/file/download.do?id="+encodeURIComponent(form.getForm().findField('id').getValue())
-							+"&name="+encodeURIComponent(form.getForm().findField('openfilename').getValue())
-							+"&savename="+encodeURIComponent(form.getForm().findField('openfilesavename').getValue())
-							+"&path="+encodeURIComponent(form.getForm().findField('openfilepath').getValue())
+							window.location.href = "/ems/file/download.do?id="+encodeURIComponent(viewform.getForm().findField('id').getValue())
+							+"&name="+encodeURIComponent(viewform.getForm().findField('openfilename').getValue())
+							+"&savename="+encodeURIComponent(viewform.getForm().findField('openfilesavename').getValue())
+							+"&path="+encodeURIComponent(viewform.getForm().findField('openfilepath').getValue())
 						}
 					}]
 				},{
@@ -1154,6 +1154,26 @@ App.Equip = function() {
 						}
 					});			
 
+			Ext.Ajax.request({
+				url : '/ems/equip/getInfo.do',
+				method : 'POST',
+				params : {
+					id : fv.id
+				},
+				success : function(response) {
+					var o = Ext.util.JSON.decode(response.responseText);
+					if(o.success){
+						Ext.apply(currentFormValues, o.o);
+						win.show();
+					}else{
+						Ext.msg.msg('拉取信息失败', o.msg);
+					}
+				},
+				failure : function() {
+					Ext.msg.msg('error', '请联系管理员');
+				}
+			});			
+					
 			var win = new Ext.Window({
 				autoWidth : true,
 				autoHeight : true,
@@ -1176,26 +1196,6 @@ App.Equip = function() {
 					}
 				}
 			})
-			
-			Ext.Ajax.request({
-				url : '/ems/equip/getInfo.do',
-				method : 'POST',
-				params : {
-					id : fv.id
-				},
-				success : function(response) {
-					var o = Ext.util.JSON.decode(response.responseText);
-					if(o.success){
-						Ext.apply(currentFormValues, o.o);
-						win.show();
-					}else{
-						Ext.msg.msg('拉取信息失败', o.msg);
-					}
-				},
-				failure : function() {
-					Ext.msg.msg('error', '请联系管理员');
-				}
-			});	
 			
 			var vform = new Ext.form.FormPanel({
 				width : 600,
