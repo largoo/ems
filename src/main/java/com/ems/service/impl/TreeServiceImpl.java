@@ -5,6 +5,7 @@ import java.util.List;
 import javax.annotation.Resource;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.ems.dao.TreeMapper;
 import com.ems.pojo.Tree;
@@ -24,6 +25,15 @@ public class TreeServiceImpl implements ITreeService{
 	@Override
 	public List<Tree> getChildren(Tree tree) {
 		return dao.getChildren(tree);
+	}
+
+	@Override @Transactional
+	public boolean insert(List<Tree> trees) {
+		int i = 0;
+		for(Tree tree : trees){
+			i += dao.insertSelective(tree);
+		}
+		return i == trees.size() ? true : false;
 	}
 
 }

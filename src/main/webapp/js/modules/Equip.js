@@ -32,7 +32,7 @@ App.Equip = function() {
 						totalProperty : 'results',
 						// 记录总数
 						root : 'rows' // Json中的列表数据根节点
-					}, ['id', 'state','idver','sver','islock']),
+					}, ['eid','id', 'state','idver','sver','islock']),
 					listeners : {
 						beforeLoad : function(store){
 							store.baseParams = {
@@ -47,7 +47,7 @@ App.Equip = function() {
 		var panel = Ext.getCmp(id);
 		panel.body.dom.innerHTML = "";
 		
-		var sm = new Ext.grid.CheckboxSelectionModel({singleSelect : true});
+		var sm = new Ext.grid.CheckboxSelectionModel({singleSelect : false});
 
 		var grid = new Ext.grid.GridPanel({
 					region : 'center',
@@ -73,6 +73,11 @@ App.Equip = function() {
 								handler : viewOrder,
 								iconCls : "x-btn-disc",
 								hidden : user.roleid > 0 ? false : true
+							},"-",{
+								text : "添加到菜单",
+								handler : addToTree
+								//iconCls : "x-btn-disc",
+								//hidden : user.roleid > 0 ? false : true
 							}, "-", {
 								xtype : "textfield",
 								id : 'search_equip',
@@ -101,9 +106,9 @@ App.Equip = function() {
 
 					store : store,
 					sm : sm,
-					columns : [sm, {
+					columns : [sm, {dataIndex : 'eid',hidden : true},{
 								header : "设备名称",
-								width : 100,
+								width : 150,
 								sortable : true,
 								dataIndex : "id"
 							},{
@@ -1378,6 +1383,7 @@ App.Equip = function() {
 		var tree = new Ext.tree.TreePanel({
 			region : 'west',
 			//title : '树',
+			//autoHeight : true,
 			width : 300,
 			frame : true,
 			animate : true,
@@ -1386,7 +1392,6 @@ App.Equip = function() {
 			enableDrag : true,
 			rootVisible : true,
 			autoScroll : true,
-			autoHeight : true,
 			lines : true,
 			loader : new Ext.tree.TreeLoader({dataUrl : '/ems/tree/getTree.do'}),
 			root : new Ext.tree.AsyncTreeNode({id:'root',text:'设备目录',expanded:true}),
@@ -1396,12 +1401,13 @@ App.Equip = function() {
 						items : [{
 							text : '添加',
 							handler : function(){
-								optTree(node,'add')
+								//optTree(node,'add')
+								alert(node.attributes.text)
 							}
 						},{
 							text : '修改',
 							handler : function(){
-								alert(node.attributes.id)
+								alert(node.attributes.text)
 							}
 						},{
 							text : '刷新',
@@ -1490,7 +1496,47 @@ App.Equip = function() {
 			
 		}
 		
-		
+		function addToTree(){
+			if(!sm.hasSelection()){
+				Ext.Msg.alert("信息", "未选择设备");
+				return;
+			}
+			if(null == tree.getSelectionModel().getSelectedNode()){
+				Ext.Msg.alert("信息", "未选择树节点");
+				return;
+			}
+			
+			var node = tree.getSelectionModel().getSelectedNode();
+			var records = sm.getSelections();
+			
+			var equips = [];
+			for(i=0;i <records.length;i++){
+				equips.push(records[i].data)
+			}
+			
+			Ext.Ajax.request({
+				url : '/ems/tree/addToTree.do',
+				method : 'POST',
+				params : {
+					equips : Ext.encode(equips),
+					pid : node.attributes.id
+				},
+				success : function(response) {
+					var o = Ext.util.JSON.decode(response.responseText);
+					if(o.success){
+						Ext.msg.msg('操作成功', o.msg);
+						tree.getRootNode().reload();
+						tree.expandAll();
+					}else{
+						Ext.msg.msg('操作失败', o.msg);
+					}
+				},
+				failure : function() {
+					Ext.msg.msg('error', '请联系管理员');
+				}
+			});	
+			
+		}
 		
 		
 		

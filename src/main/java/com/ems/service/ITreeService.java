@@ -10,4 +10,6 @@ public interface ITreeService {
 
 	List<Tree> getChildren(Tree tree);
 
+	boolean insert(List<Tree> trees);
+
 }
