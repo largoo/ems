@@ -10,7 +10,7 @@ public interface IEquipService {
 
 	boolean checkId(String id);
 
-	boolean addId(Equip equip);
+	boolean addId(Equip equip,String pid);
 
 	Equip getInfo(String id);
 

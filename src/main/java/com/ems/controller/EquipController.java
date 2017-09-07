@@ -42,12 +42,14 @@ public class EquipController {
 	@RequestMapping(value="addId", method=RequestMethod.POST)
 	@ResponseBody
 	public ExtReturn addId(Equip equip, HttpServletRequest request){
+		String pid = request.getParameter("pid");
+		System.out.println(pid);
 		equip.setId(equip.getId().toUpperCase().replaceAll(" ", ""));
 		String id = equip.getId();
 		User user = JSON.parseObject(request.getSession().getAttribute("user").toString(), User.class);
 		if(!this.service.checkId(id)){
 			equip.setCreateuserid(user.getId());
-			boolean boo = this.service.addId(equip);
+			boolean boo = this.service.addId(equip,pid);
 			return new ExtReturn(boo, boo ? "操作成功" : "操作失败");
 		}else{
 			return new ExtReturn(false, "设备唯一名称已存在");

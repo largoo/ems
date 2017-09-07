@@ -508,9 +508,11 @@ App.Equip = function() {
 					});			
 			
 		var viewform = new Ext.form.FormPanel({
+			title : '设备基础信息',
 			width : 1100,
 			height : 200,
 			labelWidth : 120,
+			collapsible : true,
 			buttonAlign : "center",
 			bodyStyle : "padding:10px;",
 			frame : true,
@@ -857,6 +859,8 @@ App.Equip = function() {
 										Ext.msg.msg("操作成功", o.msg);
 										win.close();
 										store.reload();
+										tree.getRootNode().reload();
+										tree.expandAll();
 									}else{
 										Ext.msg.msg("操作失败", o.msg);
 									}
@@ -889,6 +893,17 @@ App.Equip = function() {
 		}
 
 		function add(){
+			if(null == tree.getSelectionModel().getSelectedNode()){
+				Ext.Msg.alert("信息", "未选择树节点");
+				return;
+			}
+			
+			var node = tree.getSelectionModel().getSelectedNode();
+			if(node.attributes.eid){
+				Ext.Msg.alert("信息", "不能选择设备节点");
+				return;
+			}
+			
 			var form = new Ext.form.FormPanel({
 				url : '/ems/equip/addId.do',
 				method : 'POST',
@@ -898,6 +913,15 @@ App.Equip = function() {
 				bodyStyle : "padding:10px;",
 				frame : true,
 				items : [{
+					xtype : 'textfield',
+					name : 'pid',
+					hidden : true,
+					value : node.attributes.id
+				},{
+					xtype : 'displayfield',
+					fieldLabel : '设备分类',
+					value : node.attributes.text
+				},{
 					xtype : 'textfield',
 					name : 'id',
 					id : 'equip_id_for_uppercase',
@@ -927,6 +951,8 @@ App.Equip = function() {
 										Ext.msg.msg("操作成功", o.msg);
 										win.close();
 										store.reload();
+										tree.getRootNode().reload();
+										tree.expandAll();
 									}else{
 										Ext.msg.msg("操作失败", o.msg);
 									}
@@ -1023,7 +1049,8 @@ App.Equip = function() {
 				
 			var vgrid = new Ext.grid.GridPanel({
 						title : '设备维护记录',
-						height : 300,
+						height : 400,
+						autoScroll : true,
 						width : 1100,
 						tbar : [{
 									xtype :'button',
@@ -1176,8 +1203,9 @@ App.Equip = function() {
 					
 			var win = new Ext.Window({
 				autoWidth : true,
-				autoHeight : true,
+				height : 630,
 				title : "查看设备基础信息",
+				autoScroll : true,
 				plain : true,
 				resizable : true,
 				frame : true,
@@ -1297,6 +1325,8 @@ App.Equip = function() {
 										var o = Ext.util.JSON.decode(response.responseText);
 										if(o.success){
 											store.reload();
+											tree.getRootNode().reload();
+											tree.expandAll();
 										}else{
 											Ext.msg.msg('操作成功', o.msg);
 										}
@@ -1378,8 +1408,6 @@ App.Equip = function() {
 			
 		}
 		
-		
-		
 		var tree = new Ext.tree.TreePanel({
 			region : 'west',
 			//title : '树',
@@ -1418,6 +1446,9 @@ App.Equip = function() {
 						}]
 					})
 					menu.showAt(e.getPoint());
+				},
+				'click' : function(node,e){
+					alert(node.attributes.text)
 				}
 			}
 		});

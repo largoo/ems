@@ -53,10 +53,12 @@ App.createNorth = function() {
 			pressed: true,
 			text: user.name,
 			menu: new Ext.menu.Menu({
-				items: [{
-					text: "修改密码",
-					iconCls: "x-btn-lock"
-				}, {
+				items: [
+					//{
+					//text: "修改密码",
+					//iconCls: "x-btn-lock"
+				//}, 
+					{
 					text: "退出系统",
 					iconCls: "x-btn-exit",
 					handler: function() {

@@ -6,9 +6,12 @@ import java.util.List;
 import javax.annotation.Resource;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.ems.dao.EquipMapper;
+import com.ems.dao.TreeMapper;
 import com.ems.pojo.Equip;
+import com.ems.pojo.Tree;
 import com.ems.service.IEquipService;
 import com.ems.utils.Utils;
 
@@ -17,6 +20,9 @@ public class EquipServiceImpl implements IEquipService{
 
 	@Resource
 	private EquipMapper dao;
+	
+	@Resource
+	private TreeMapper tdao;
 	
 	@Override
 	public List<Equip> getIds(Equip equip) {
@@ -28,9 +34,19 @@ public class EquipServiceImpl implements IEquipService{
 		return dao.checkId(id) == 0 ? false : true;
 	}
 
-	@Override
-	public boolean addId(Equip equip) {
-		return dao.addId(equip) == 1 ? true : false;
+	@Override @Transactional
+	public boolean addId(Equip equip, String pid) {
+		int i = 0;
+		i += dao.addId(equip);
+		
+		int eid = dao.getEid(equip.getId());
+		Tree tree = new Tree();
+		tree.setEid(eid);
+		tree.setPid(Integer.valueOf(pid));
+		tree.setText(equip.getId());
+		i += tdao.insertSelective(tree);
+		
+		return  i == 2 ? true : false;
 	}
 
 	@Override

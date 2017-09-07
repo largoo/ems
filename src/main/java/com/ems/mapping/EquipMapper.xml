@@ -70,6 +70,10 @@
   	</if>
   </select>
   
+  <select id="getEid" resultType="java.lang.Integer" parameterType="java.lang.String">
+  	select eid from equip where del = 0 and id = #{id,jdbcType=VARCHAR}
+  </select>
+  
   <select id="checkId" resultType="java.lang.Integer" parameterType="java.lang.String">
   	select count(id) from equip where del = 0 and id = #{id,jdbcType=VARCHAR}
   </select>

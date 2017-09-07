@@ -38,4 +38,6 @@ public interface EquipMapper {
 	int updateState(String equipid, Integer type);
 
 	int updateStateBack(String equipid);
+
+	int getEid(String id);
 }
