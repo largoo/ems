@@ -20,6 +20,8 @@ App.Equip = function() {
 		var osearch = '';
 		
 		var eqid = '';
+		
+		var eids = [];
 			
 		var store = new Ext.data.Store({
 					remoteSort : true,
@@ -38,7 +40,8 @@ App.Equip = function() {
 							store.baseParams = {
 								start : 0,
 								limit : 20,
-								id : search
+								id : search,
+								eids : eids.toString()
 							}
 						}
 					}
@@ -73,11 +76,6 @@ App.Equip = function() {
 								handler : viewOrder,
 								iconCls : "x-btn-disc",
 								hidden : user.roleid > 0 ? false : true
-							},"-",{
-								text : "添加到菜单",
-								handler : addToTree
-								//iconCls : "x-btn-disc",
-								//hidden : user.roleid > 0 ? false : true
 							}, "-", {
 								xtype : "textfield",
 								id : 'search_equip',
@@ -1448,10 +1446,26 @@ App.Equip = function() {
 					menu.showAt(e.getPoint());
 				},
 				'click' : function(node,e){
-					alert(node.attributes.text)
+					eids = [];
+					if(node.attributes.eid){
+						eids.push(node.attributes.eid);
+					}else{
+						findChild(node);
+					}
+					store.reload();
 				}
 			}
 		});
+		
+		findChild = function(node){
+			node.eachChild(function(n){
+				if(n.attributes.eid){
+					eids.push(n.attributes.eid);
+				}else{
+					findChild(n)
+				}
+			})
+		};
 		
 		optTree = function(node,action){
 			var form = new Ext.form.FormPanel({

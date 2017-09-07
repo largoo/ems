@@ -31,11 +31,12 @@ public class EquipController {
 	@ResponseBody
 	public ExtGridReturn getIds(ExtPager pager, HttpServletRequest request){
 		String id = request.getParameter("id");
+		String eids = request.getParameter("eids");
 		Equip e = new Equip();
 		if(id != null && !id.trim().equals(""))
 			e.setId(id);
 		Page<?> page = PageHelper.startPage(pager.getStart()/pager.getLimit()+1, pager.getLimit());
-		List<Equip> rows = this.service.getIds(e);
+		List<Equip> rows = this.service.getIds(e,eids);
 		return new ExtGridReturn((int)page.getTotal(), rows);
 	}
 	

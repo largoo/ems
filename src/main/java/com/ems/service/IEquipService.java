@@ -6,7 +6,7 @@ import com.ems.pojo.Equip;
 
 public interface IEquipService {
 
-	List<Equip> getIds(Equip equip);
+	List<Equip> getIds(Equip equip, String eids);
 
 	boolean checkId(String id);
 

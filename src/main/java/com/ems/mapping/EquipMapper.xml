@@ -63,10 +63,16 @@
   	<result column="islock" property="islock" jdbcType="INTEGER" />
   </resultMap>
   
-  <select id="getIds" resultMap="idsMap" parameterType="com.ems.pojo.Equip" >
+  <select id="getIds" resultMap="idsMap" >
   	select eid, id, state, sver, idver,islock from equip where del = 0
   	<if test="id !=null and id != ''">
   		and id like '%${id}%'
+  	</if>
+  	<if test = "eids !=null">
+	  	and eid in 
+	  	<foreach item="item" index="index" collection="eids" open = "(" separator="," close=")">
+	  		#{item}
+	  	</foreach>
   	</if>
   </select>
   

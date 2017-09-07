@@ -1,6 +1,7 @@
 package com.ems.dao;
 
 import java.util.List;
+import java.util.Map;
 
 import com.ems.pojo.Equip;
 
@@ -17,7 +18,7 @@ public interface EquipMapper {
 
     int updateByPrimaryKey(Equip equip);
     
-    List<Equip> getIds(Equip equip);
+    List<Equip> getIds(Map<String, Object> map);
 
 	int checkId(String id);
 

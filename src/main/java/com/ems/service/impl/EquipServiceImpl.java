@@ -1,7 +1,9 @@
 package com.ems.service.impl;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Resource;
 
@@ -25,8 +27,15 @@ public class EquipServiceImpl implements IEquipService{
 	private TreeMapper tdao;
 	
 	@Override
-	public List<Equip> getIds(Equip equip) {
-		return dao.getIds(equip);
+	public List<Equip> getIds(Equip equip,String eids) {
+		String[] eid = null;
+		if(null != eids && !"".equals(eids)){
+			eid = eids.split(",");
+		}
+		Map<String,Object> map = new HashMap<String,Object>();
+		map.put("id", equip.getId());
+		map.put("eids", eid);
+		return dao.getIds(map);
 	}
 
 	@Override
