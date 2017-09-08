@@ -12,7 +12,7 @@ public class Equip {
     private String model;
 
     private String assetno;
-
+    
     private String opendate;
 
     private String openfilename;
@@ -79,13 +79,13 @@ public class Equip {
 
     private Integer eid;
 
-    private String equipcol1;
+    private String assetdate;
 
-    private String equipcol2;
+    private String assetfilename;
 
-    private String equipcol3;
+    private String assetfilesavename;
 
-    private String equipcol4;
+    private String assetfilepath;
 
 	public Integer getEid() {
 		return eid;
@@ -391,36 +391,37 @@ public class Equip {
 		this.sver = sver;
 	}
 
-	public String getEquipcol1() {
-		return equipcol1;
+	public String getAssetdate() {
+		return assetdate;
 	}
 
-	public void setEquipcol1(String equipcol1) {
-		this.equipcol1 = equipcol1;
+	public void setAssetdate(String assetdate) {
+		this.assetdate = assetdate;
 	}
 
-	public String getEquipcol2() {
-		return equipcol2;
+	public String getAssetfilename() {
+		return assetfilename;
 	}
 
-	public void setEquipcol2(String equipcol2) {
-		this.equipcol2 = equipcol2;
+	public void setAssetfilename(String assetfilename) {
+		this.assetfilename = assetfilename;
 	}
 
-	public String getEquipcol3() {
-		return equipcol3;
+	public String getAssetfilesavename() {
+		return assetfilesavename;
 	}
 
-	public void setEquipcol3(String equipcol3) {
-		this.equipcol3 = equipcol3;
+	public void setAssetfilesavename(String assetfilesavename) {
+		this.assetfilesavename = assetfilesavename;
 	}
 
-	public String getEquipcol4() {
-		return equipcol4;
+	public String getAssetfilepath() {
+		return assetfilepath;
 	}
 
-	public void setEquipcol4(String equipcol4) {
-		this.equipcol4 = equipcol4;
+	public void setAssetfilepath(String assetfilepath) {
+		this.assetfilepath = assetfilepath;
 	}
+
 
 }

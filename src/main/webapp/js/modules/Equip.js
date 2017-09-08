@@ -316,6 +316,13 @@ App.Equip = function() {
 					anchor : "98%"
 				},{
 					xtype : "datefield",
+					name : "assetdate",
+					format:'Y-m-d',
+					fieldLabel : "转固定资产日期",
+					anchor : "98%",
+					editable : false
+				},{
+					xtype : "datefield",
 					name : "opendate",
 					format:'Y-m-d',
 					fieldLabel : "开箱日期",
@@ -375,6 +382,48 @@ App.Equip = function() {
 					name : "model",
 					fieldLabel : "型号",
 					anchor : "98%"
+				},{
+					layout : 'column',
+					items : [{
+						layout : 'form',
+						items : [{
+							xtype : 'textfield',
+							name : 'assetfilename',
+							fieldLabel : "转固定资产附档",
+							readOnly : true
+						}]
+					},{
+						xtype : 'textfield',
+						name : 'assetfilesavename',
+						hidden : true
+					},{
+						xtype : 'textfield',
+						name : 'assetfilepath',
+						hidden : true
+					},{
+						xtype : 'button',
+						text : '上传',
+						onClick : function(){
+							addFile('asset',form.getForm().findField('id').getValue())
+						}
+					},{
+						xtype : 'button',
+						text : '清除',
+						handler : function(){
+							form.getForm().findField('assetfilename').reset();
+							form.getForm().findField('assetfilesavename').reset();
+							form.getForm().findField('assetfilepath').reset();
+						}
+					},{
+						xtype : 'button',
+						text : '下载',
+						handler : function(){
+							window.location.href = "/ems/file/download.do?id="+encodeURIComponent(form.getForm().findField('id').getValue())
+							+"&name="+encodeURIComponent(form.getForm().findField('assetfilename').getValue())
+							+"&savename="+encodeURIComponent(form.getForm().findField('assetfilesavename').getValue())
+							+"&path="+encodeURIComponent(form.getForm().findField('assetfilepath').getValue())
+						}
+					}]
 				},{
 					layout : 'column',
 					items : [{
@@ -633,6 +682,13 @@ App.Equip = function() {
 					readOnly : true
 				},{
 					xtype : "datefield",
+					name : "assetdate",
+					format:'Y-m-d',
+					fieldLabel : "转固定资产日期",
+					anchor : "98%",
+					readOnly : true
+				},{
+					xtype : "datefield",
 					name : "opendate",
 					format:'Y-m-d',
 					fieldLabel : "开箱日期",
@@ -693,6 +749,34 @@ App.Equip = function() {
 					fieldLabel : "型号",
 					anchor : "98%",
 					readOnly : true
+				},{
+					layout : 'column',
+					items : [{
+						layout : 'form',
+						items : [{
+							xtype : 'textfield',
+							name : 'assetfilename',
+							fieldLabel : "转固定资产附档",
+							readOnly : true
+						}]
+					},{
+						xtype : 'textfield',
+						name : 'assetfilesavename',
+						hidden : true
+					},{
+						xtype : 'textfield',
+						name : 'assetfilepath',
+						hidden : true
+					},{
+						xtype : 'button',
+						text : '下载',
+						handler : function(){
+							window.location.href = "/ems/file/download.do?id="+encodeURIComponent(viewform.getForm().findField('id').getValue())
+							+"&name="+encodeURIComponent(viewform.getForm().findField('assetfilename').getValue())
+							+"&savename="+encodeURIComponent(viewform.getForm().findField('assetfilesavename').getValue())
+							+"&path="+encodeURIComponent(viewform.getForm().findField('assetfilepath').getValue())
+						}
+					}]
 				},{
 					layout : 'column',
 					items : [{
@@ -856,6 +940,7 @@ App.Equip = function() {
 									if(o.success){
 										Ext.msg.msg("操作成功", o.msg);
 										win.close();
+										eids = [];
 										store.reload();
 										tree.getRootNode().reload();
 										tree.expandAll();
@@ -948,6 +1033,7 @@ App.Equip = function() {
 									if(o.success){
 										Ext.msg.msg("操作成功", o.msg);
 										win.close();
+										eids = [];
 										store.reload();
 										tree.getRootNode().reload();
 										tree.expandAll();
@@ -1380,6 +1466,10 @@ App.Equip = function() {
 									f.getForm().findField('openfilename').setValue(o.o.name)
 									f.getForm().findField('openfilesavename').setValue(o.o.savename);
 									f.getForm().findField('openfilepath').setValue(o.o.path);
+								}else if(type == 'asset'){
+									f.getForm().findField('assetfilename').setValue(o.o.name)
+									f.getForm().findField('assetfilesavename').setValue(o.o.savename);
+									f.getForm().findField('assetfilepath').setValue(o.o.path);
 								}
 								filewin.close();
 							}

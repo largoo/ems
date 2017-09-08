@@ -40,10 +40,10 @@
     <result column="lockdate" property="lockdate" jdbcType="VARCHAR" />
     <result column="state" property="state" jdbcType="INTEGER" />
     <result column="sver" property="sver" jdbcType="INTEGER" />
-    <result column="equipcol1" property="equipcol1" jdbcType="VARCHAR" />
-    <result column="equipcol2" property="equipcol2" jdbcType="VARCHAR" />
-    <result column="equipcol3" property="equipcol3" jdbcType="VARCHAR" />
-    <result column="equipcol4" property="equipcol4" jdbcType="VARCHAR" />
+    <result column="assetdate" property="assetdate" jdbcType="VARCHAR" />
+    <result column="assetfilename" property="assetfilename" jdbcType="VARCHAR" />
+    <result column="assetfilesavename" property="assetfilesavename" jdbcType="VARCHAR" />
+    <result column="assetfilepath" property="assetfilepath" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
     eid, id, idver, manu, model, assetno, opendate, openfilename, openfilesavename, openfilepath, 
@@ -51,7 +51,7 @@
     powerondate, togy, togyfilename, togyfilesavename, togyfilepath, toproductdate, fatdate, 
     fatfilename, fatfilesavename, fatfilepath, warrantydatestart, warrantydateend, linetype, 
     ver, del, createuserid, createtime, islock, lockuserid, lockdate, state, sver,  
-    equipcol1, equipcol2, equipcol3, equipcol4
+    assetdate, assetfilename, assetfilesavename, assetfilepath
   </sql>
   
   <resultMap id="idsMap" type="com.ems.pojo.Equip">
@@ -179,6 +179,18 @@
         warrantydateend = #{warrantydateend,jdbcType=VARCHAR},
       </if>
         ver = ver + 1,
+      <if test="assetdate != null" >
+        assetdate = #{assetdate,jdbcType=VARCHAR},
+      </if>
+      <if test="assetfilename != null" >
+        assetfilename = #{assetfilename,jdbcType=VARCHAR},
+      </if>
+      <if test="assetfilesavename != null" >
+        assetfilesavename = #{assetfilesavename,jdbcType=VARCHAR},
+      </if>
+      <if test="assetfilepath != null" >
+        assetfilepath = #{assetfilepath,jdbcType=VARCHAR},
+      </if> 
     </set>
     where id = #{id,jdbcType=VARCHAR}
   </update>
@@ -320,17 +332,17 @@
       <if test="sver != null" >
         sver,
       </if>
-      <if test="equipcol1 != null" >
-        equipcol1,
+      <if test="assetdate != null" >
+        assetdate,
       </if>
-      <if test="equipcol2 != null" >
-        equipcol2,
+      <if test="assetfilename != null" >
+        assetfilename,
       </if>
-      <if test="equipcol3 != null" >
-        equipcol3,
+      <if test="assetfilesavename != null" >
+        assetfilesavename,
       </if>
-      <if test="equipcol4 != null" >
-        equipcol4,
+      <if test="assetfilepath != null" >
+        assetfilepath,
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
@@ -442,17 +454,17 @@
       <if test="sver != null" >
         #{sver,jdbcType=INTEGER},
       </if>
-      <if test="equipcol1 != null" >
-        #{equipcol1,jdbcType=VARCHAR},
+      <if test="assetdate != null" >
+        #{assetdate,jdbcType=VARCHAR},
       </if>
-      <if test="equipcol2 != null" >
-        #{equipcol2,jdbcType=VARCHAR},
+      <if test="assetfilename != null" >
+        #{assetfilename,jdbcType=VARCHAR},
       </if>
-      <if test="equipcol3 != null" >
-        #{equipcol3,jdbcType=VARCHAR},
+      <if test="assetfilesavename != null" >
+        #{assetfilesavename,jdbcType=VARCHAR},
       </if>
-      <if test="equipcol4 != null" >
-        #{equipcol4,jdbcType=VARCHAR},
+      <if test="assetfilepath != null" >
+        #{assetfilepath,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
@@ -564,17 +576,17 @@
       <if test="sver != null" >
         sver = #{sver,jdbcType=INTEGER},
       </if>
-      <if test="equipcol1 != null" >
-        equipcol1 = #{equipcol1,jdbcType=VARCHAR},
+      <if test="assetdate != null" >
+        assetdate = #{assetdate,jdbcType=VARCHAR},
       </if>
-      <if test="equipcol2 != null" >
-        equipcol2 = #{equipcol2,jdbcType=VARCHAR},
+      <if test="assetfilename != null" >
+        assetfilename = #{assetfilename,jdbcType=VARCHAR},
       </if>
-      <if test="equipcol3 != null" >
-        equipcol3 = #{equipcol3,jdbcType=VARCHAR},
+      <if test="assetfilesavename != null" >
+        assetfilesavename = #{assetfilesavename,jdbcType=VARCHAR},
       </if>
-      <if test="equipcol4 != null" >
-        equipcol4 = #{equipcol4,jdbcType=VARCHAR},
+      <if test="assetfilepath != null" >
+        assetfilepath = #{assetfilepath,jdbcType=VARCHAR},
       </if>
     </set>
     where id = #{id,jdbcType=VARCHAR}
@@ -616,10 +628,10 @@
       lockdate = #{lockdate,jdbcType=VARCHAR},
       state = #{state,jdbcType=INTEGER},
       sver = #{sver,jdbcType=INTEGER},
-      equipcol1 = #{equipcol1,jdbcType=VARCHAR},
-      equipcol2 = #{equipcol2,jdbcType=VARCHAR},
-      equipcol3 = #{equipcol3,jdbcType=VARCHAR},
-      equipcol4 = #{equipcol4,jdbcType=VARCHAR}
+      assetdate = #{assetdate,jdbcType=VARCHAR},
+      assetfilename = #{assetfilename,jdbcType=VARCHAR},
+      assetfilesavename = #{assetfilesavename,jdbcType=VARCHAR},
+      assetfilepath = #{assetfilepath,jdbcType=VARCHAR}
     where id = #{id,jdbcType=VARCHAR}
   </update>
 </mapper>
