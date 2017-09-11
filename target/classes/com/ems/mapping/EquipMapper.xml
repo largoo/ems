@@ -74,6 +74,7 @@
 	  		#{item}
 	  	</foreach>
   	</if>
+  	order by state desc
   </select>
   
   <select id="getEid" resultType="java.lang.Integer" parameterType="java.lang.String">

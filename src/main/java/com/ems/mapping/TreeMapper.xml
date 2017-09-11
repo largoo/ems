@@ -9,6 +9,7 @@
     <result column="text" property="text" jdbcType="VARCHAR" />
     <result column="del" property="del" jdbcType="INTEGER" />
     <result column="ver" property="ver" jdbcType="INTEGER" />
+    <result column="state" property="state" jdbcType="INTEGER"/>
   </resultMap>
   <sql id="Base_Column_List" >
     id, pid, eid, leaf, text, del, ver
@@ -120,7 +121,7 @@
   </select>
 
   <select id="getChildren" resultMap="BaseResultMap">
-  	select * from tree where pid = #{id, jdbcType=INTEGER} and del = 0
+  	select a.*,b.state from tree a left join equip b on a.eid = b.eid where a.pid = #{id, jdbcType=INTEGER} and a.del = 0
   </select>
 
 </mapper>

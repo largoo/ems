@@ -1379,7 +1379,13 @@ App.Equip = function() {
 							vform.form.waitMsgTarget = fp.getEl();
 						},
 						show : function() {
-							vform.form.setValues(vsm.getSelected().data);
+							var da = vsm.getSelected().data;
+							if(da.type == 1){
+								da.type = '保养'
+							}else if(da.type == 2){
+								da.type = '异常'
+							}
+							vform.form.setValues(da);
 							vform.form.clearInvalid();
 						}
 					},
@@ -1504,8 +1510,8 @@ App.Equip = function() {
 			frame : true,
 			animate : true,
 			collapsible : true,
-			enableDD : true,
-			enableDrag : true,
+			//enableDD : true,
+			//enableDrag : true,
 			rootVisible : true,
 			autoScroll : true,
 			lines : true,
@@ -1517,7 +1523,6 @@ App.Equip = function() {
 						items : [{
 							text : '添加',
 							handler : function(){
-								//optTree(node,'add')
 								alert(node.attributes.text)
 							}
 						},{
@@ -1543,6 +1548,13 @@ App.Equip = function() {
 						findChild(node);
 					}
 					store.reload();
+				},
+				'expandnode' : function(node){
+					if(node.attributes.state == 1){
+						node.setText("<font color=orange>"+node.text+"</font>");
+					}else if(node.attributes.state == 2){
+						node.setText("<font color=red>"+node.text+"</font>");
+					}
 				}
 			}
 		});
