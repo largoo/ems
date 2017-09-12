@@ -16,3 +16,9 @@ hs_err_pid*
 /target/
 target/m2e-jee/web-resources/META-INF/MANIFEST.MF
 target/m2e-jee/web-resources/META-INF/maven/com.dzs/ems/pom.properties
+.classpath
+.settings/com.genuitec.eclipse.migration.prefs
+.settings/org.eclipse.wst.common.project.facet.core.xml
+.settings/org.eclipse.wst.common.project.facet.core.xml
+target/m2e-jee/web-resources/META-INF/MANIFEST.MF
+target/m2e-jee/web-resources/META-INF/maven/com.dzs/ems/pom.properties
