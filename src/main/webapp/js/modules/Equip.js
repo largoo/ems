@@ -50,33 +50,44 @@ App.Equip = function() {
 		var panel = Ext.getCmp(id);
 		panel.body.dom.innerHTML = "";
 		
-		var sm = new Ext.grid.CheckboxSelectionModel({singleSelect : false});
+		var sm = new Ext.grid.CheckboxSelectionModel({singleSelect : true});
 
 		var grid = new Ext.grid.GridPanel({
 					region : 'center',
 					tbar : [{
 								text : "新增设备",
 								iconCls : "x-btn-add",
+								hidden : user.roleid > 0 ? false : true,
 								handler : add
-							}, "-", {
+							},{
 								text : "修改设备名称",
 								iconCls : "x-btn-edit",
+								hidden : user.roleid > 0 ? false : true,
 								handler : editname
-							}, "-", {
+							},{
 								text : "编辑|查看设备基础信息",
 								iconCls : "x-btn-edit",
+								hidden : user.roleid > 0 ? false : true,
 								handler : edit
-							}, "-", {
+							},{
 								text : "删除",
 								iconCls : "x-btn-del",
 								handler : del,
 								hidden : user.roleid > 1 ? false : true
-							}, "-", {
+							},{
 								text : "查看维护记录",
 								handler : viewOrder,
 								iconCls : "x-btn-disc",
 								hidden : user.roleid > 0 ? false : true
-							}, "-", {
+							},{
+								text : '异常/保养发起',
+								handler : changeState,
+								iconCls : 'x-btn-add'
+							},{
+								text : '异常/保养处理',
+								handler : changeStateBack,
+								iconCls : 'x-btn-check'
+							},{
 								xtype : "textfield",
 								id : 'search_equip',
 								emptyText : "根据名称查询",
@@ -87,7 +98,7 @@ App.Equip = function() {
 										store.reload()
 									}
 								}
-							}, {
+							},{
 								xtype : "button",
 								text : "查询",
 								iconCls : "x-btn-search",
@@ -1117,7 +1128,7 @@ App.Equip = function() {
 					// 记录总数
 					root : 'rows' // Json中的列表数据根节点
 				}, ['id', 'equipid','starttime','type','illustrate','solution','endtime','replaces'
-				,'remark','updateuserid','state','ver','user']),
+				,'remark','updateuserid','state','ver','user','handlefilename','handlefilesavename','handlefilepath']),
 				listeners : {
 					beforeLoad : function(store){
 						store.baseParams = {
@@ -1177,6 +1188,15 @@ App.Equip = function() {
 									header : 'ver',
 									hidden : true,
 									dataIndex : 'ver'
+								},{
+									hidden : true,
+									dataIndex : 'handlefilename'
+								},{
+									hidden : true,
+									dataIndex : 'handlefilesavename'
+								},{
+									hidden : true,
+									dataIndex : 'handlefilepath'
 								},{
 									header : "日期",
 									width : 60,
@@ -1262,6 +1282,9 @@ App.Equip = function() {
 						border : false,
 						viewConfig : {
 							forceFit : true
+						},
+						listeners : {
+							'dblClick' : viewvform
 						}
 					});			
 
@@ -1349,6 +1372,34 @@ App.Equip = function() {
 					height : 150,
 					readOnly : true
 		        },{
+					layout : 'column',
+					items : [{
+						layout : 'form',
+						items : [{
+							xtype : 'textfield',
+							name : 'handlefilename',
+							fieldLabel : "处理附档",
+							readOnly : true
+						}]
+					},{
+						xtype : 'textfield',
+						name : 'handlefilesavename',
+						hidden : true
+					},{
+						xtype : 'textfield',
+						name : 'handlefilepath',
+						hidden : true
+					},{
+						xtype : 'button',
+						text : '下载',
+						handler : function(){
+							window.location.href = "/ems/file/download.do?id="+encodeURIComponent(vform.getForm().findField('equipid').getValue())
+							+"&name="+encodeURIComponent(vform.getForm().findField('handlefilename').getValue())
+							+"&savename="+encodeURIComponent(vform.getForm().findField('handlefilesavename').getValue())
+							+"&path="+encodeURIComponent(vform.getForm().findField('handlefilepath').getValue())
+						}
+					}]
+				},{
 		        	xtype : 'textarea',
 					name : 'remark',
 					fieldLabel : '备注',
@@ -1432,7 +1483,7 @@ App.Equip = function() {
 			}
 		}
 			
-		function addFile(type,id){
+		function addFile(type,id,ff){
 			var f = form;
 			var fileform = new Ext.form.FormPanel({
 				url : '/ems/file/upload.do?F_FileType='+type+'&F_FileOfId='+encodeURIComponent(id),
@@ -1476,6 +1527,10 @@ App.Equip = function() {
 									f.getForm().findField('assetfilename').setValue(o.o.name)
 									f.getForm().findField('assetfilesavename').setValue(o.o.savename);
 									f.getForm().findField('assetfilepath').setValue(o.o.path);
+								}else if(type == 'handle'){
+									ff.getForm().findField('handlefilename').setValue(o.o.name)
+									ff.getForm().findField('handlefilesavename').setValue(o.o.savename);
+									ff.getForm().findField('handlefilepath').setValue(o.o.path);
 								}
 								filewin.close();
 							}
@@ -1506,7 +1561,7 @@ App.Equip = function() {
 			region : 'west',
 			//title : '树',
 			//autoHeight : true,
-			width : 300,
+			width : 400,
 			frame : true,
 			animate : true,
 			collapsible : true,
@@ -1521,23 +1576,13 @@ App.Equip = function() {
 				'contextmenu' : function(node,e){
 					var menu = new Ext.menu.Menu({
 						items : [{
-							text : '添加',
-							handler : function(){
-								alert(node.attributes.text)
-							}
-						},{
-							text : '修改',
-							handler : function(){
-								alert(node.attributes.text)
-							}
-						},{
 							text : '刷新',
 							handler : function(){
 								tree.getRootNode().reload();
 								tree.expandAll();
 							}
 						}]
-					})
+					});
 					menu.showAt(e.getPoint());
 				},
 				'click' : function(node,e){
@@ -1637,10 +1682,6 @@ App.Equip = function() {
 			});
 			
 			win.show();
-			
-			
-			
-			
 		}
 		
 		function addToTree(){
@@ -1685,12 +1726,289 @@ App.Equip = function() {
 			
 		}
 		
-		
-		
-		
-		
-		
 		tree.expandAll();
+		
+		function changeState(){
+			if(!sm.hasSelection()){
+				Ext.msg.msg("","请先选中相应设备")
+				return
+			}
+			if(sm.getSelected().data.state != 0){
+				Ext.msg.msg("","设备维护中")
+				return
+			}
+			var form = new Ext.form.FormPanel({
+				url : '/ems/order/addOrder.do',
+				method : 'POST',
+				width : 600,
+				height : 600,
+				buttonAlign : "center",
+				bodyStyle : "padding:10px;",
+				frame : true,
+				items : [{
+					xtype : 'textfield',
+					name : 'equipid',
+					fieldLabel : '设备名称',
+					anchor : "98%",
+					value : sm.getSelected().data.id,
+					readOnly : true
+				},{
+		            xtype: 'radiogroup',
+		            fieldLabel: '类型',
+		            items: [
+		                {boxLabel: '异常', name: 'type', inputValue: 2},
+		                {boxLabel: '保养', name: 'type', inputValue: 1}
+		            ],
+		            allowBlank : false,
+		            anchor : "98%"
+		        },{
+		        	xtype : 'datetimefield',
+		        	name : 'starttime',
+		        	fieldLabel : '时间',
+		        	anchor : '98%',
+		        	editable : false
+		        },{
+		        	xtype : 'textarea',
+					name : 'illustrate',
+					fieldLabel : '情况说明',
+					anchor : "98%",
+					height : 400
+		        }],
+				buttons : [{
+					text : '提交',
+					onClick : function(){
+						if(form.form.isValid()){
+							form.getForm().submit({
+								waitMsg : '操作中...',
+								success : function(form, action){
+									var o = Ext.util.JSON.decode(action.response.responseText);
+									if(o.success){
+										Ext.msg.msg("操作成功", o.msg);
+										win.close();
+										store.reload();
+										tree.getRootNode().reload();
+										tree.expandAll();
+									}else{
+										Ext.msg.msg("操作失败", o.msg);
+									}
+								},
+								failure : function(form, action) {
+									var o = Ext.util.JSON.decode(action.response.responseText);
+									Ext.msg.msg("操作失败", o.msg);
+								}
+							})
+						}
+					}
+				}]
+			})
+			
+			var win = new Ext.Window({
+				width : 600,
+				height : 610,
+				title : "异常/保养",
+				plain : true,
+				resizable : false,
+				frame : true,
+				closeAction : "close",
+				border : false,
+				modal : true,
+				layout : "fit",
+				items : [form]
+			})
+			
+			win.show();
+		};
+		
+		function changeStateBack(){
+			if(!sm.hasSelection()){
+				Ext.msg.msg("","请先选中相应设备")
+				return
+			}
+			if(sm.getSelected().data.state == 0){
+				Ext.msg.msg("","设备无需处理")
+				return
+			}
+			var form = new Ext.form.FormPanel({
+				url : '/ems/order/updateOrder.do',
+				method : 'POST',
+				width : 600,
+				height : 700,
+				buttonAlign : "center",
+				bodyStyle : "padding:10px;",
+				frame : true,
+				items : [{
+					xtype : 'textfield',
+					name : 'equipid',
+					fieldLabel : '设备名称',
+					anchor : "98%",
+					value : sm.getSelected().data.id,
+					readOnly : true
+				},{
+		            xtype: 'displayfield',
+		            fieldLabel: '类型',
+		            name : 'type',
+		            anchor : "98%"
+		        },{
+		        	xtype : 'displayfield',
+		        	name : 'starttime',
+		        	anchor : '98%',
+		        	fieldLabel : '开始时间'
+		        },{
+		        	xtype : 'datetimefield',
+		        	name : 'endtime',
+		        	anchor : '98%',
+		        	editable : false,
+		        	fieldLabel : '处理时间'
+		        },{
+		        	xtype : 'displayfield',
+					name : 'illustrate',
+					fieldLabel : '情况说明',
+					anchor : "98%"
+		        },{
+		        	xtype : 'textarea',
+					name : 'solution',
+					fieldLabel : '处理措施记录',
+					anchor : "98%",
+					height : 170
+		        },{
+		        	xtype : 'textarea',
+					name : 'replaces',
+					fieldLabel : '更换备件名称及型号记录',
+					anchor : "98%",
+					height : 170
+		        },{
+					layout : 'column',
+					items : [{
+						layout : 'form',
+						items : [{
+							xtype : 'textfield',
+							name : 'handlefilename',
+							fieldLabel : "处理附档",
+							readOnly : true
+						}]
+					},{
+						xtype : 'textfield',
+						name : 'handlefilesavename',
+						hidden : true
+					},{
+						xtype : 'textfield',
+						name : 'handlefilepath',
+						hidden : true
+					},{
+						xtype : 'button',
+						text : '上传',
+						onClick : function(){
+							addFile('handle',form.getForm().findField('id').getValue(),form)
+						}
+					},{
+						xtype : 'button',
+						text : '清除',
+						handler : function(){
+							form.getForm().findField('handlefilename').reset();
+							form.getForm().findField('handlefilesavename').reset();
+							form.getForm().findField('handlefilepath').reset();
+						}
+					},{
+						xtype : 'button',
+						text : '下载',
+						handler : function(){
+							window.location.href = "/ems/file/download.do?id="+encodeURIComponent(form.getForm().findField('id').getValue())
+							+"&name="+encodeURIComponent(form.getForm().findField('handlefilename').getValue())
+							+"&savename="+encodeURIComponent(form.getForm().findField('handlefilesavename').getValue())
+							+"&path="+encodeURIComponent(form.getForm().findField('handlefilepath').getValue())
+						}
+					}]
+				},{
+		        	xtype : 'textarea',
+					name : 'remark',
+					fieldLabel : '备注',
+					anchor : "98%",
+					height : 170
+		        },{
+		        	xtype : 'textfield',
+		        	name : 'sver',
+		        	hidden : true,
+		        	value : sm.getSelected().data.sver
+		        },{
+		        	xtype : 'textfield',
+		        	name : 'ver',
+		        	hidden : true
+		        },{
+		        	xtype : 'textfield',
+		        	name : 'id',
+		        	hidden : true
+		        }],
+				buttons : [{
+					text : '提交',
+					onClick : function(){
+						if(form.form.isValid()){
+							form.getForm().submit({
+								waitMsg : '操作中...',
+								success : function(form, action){
+									var o = Ext.util.JSON.decode(action.response.responseText);
+									if(o.success){
+										Ext.msg.msg("操作成功", o.msg);
+										win.close();
+										store.reload();
+										tree.getRootNode().reload();
+										tree.expandAll();
+									}else{
+										Ext.msg.msg("操作失败", o.msg);
+									}
+								},
+								failure : function(form, action) {
+									var o = Ext.util.JSON.decode(action.response.responseText);
+									Ext.msg.msg("操作失败", o.msg);
+								}
+							})
+						}
+					}
+				}]
+			})
+			
+			Ext.Ajax.request({
+				url : '/ems/order/getOrder.do',
+				method : 'POST',
+				params : {
+					equipid : sm.getSelected().data.id
+				},
+				success : function(response) {
+					var o = Ext.util.JSON.decode(response.responseText);
+					if(o.success){
+						form.getForm().setValues({
+							illustrate : o.o.illustrate,
+							type : o.o.type == 1 ? '保养' : '异常',
+							id : o.o.id,
+							ver : o.o.ver,
+							starttime : o.o.starttime
+						})
+					}else{
+						Ext.msg.msg('拉取信息失败', o.msg);
+						return
+					}
+				},
+				failure : function() {
+					Ext.msg.msg('error', '请联系管理员');
+					return
+				}
+			});	
+			
+			var win = new Ext.Window({
+				width : 600,
+				height : 710,
+				title : "异常/保养处理",
+				plain : true,
+				resizable : false,
+				frame : true,
+				closeAction : "close",
+				border : false,
+				modal : true,
+				layout : "fit",
+				items : [form]
+			})
+			
+			win.show();
+		};
 		
 		var p = new Ext.Panel({
 			layout : 'border',

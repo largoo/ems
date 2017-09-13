@@ -4,11 +4,11 @@
   <resultMap id="BaseResultMap" type="com.ems.pojo.Orders" >
     <id column="id" property="id" jdbcType="INTEGER" />
     <result column="equipid" property="equipid" jdbcType="VARCHAR" />
-    <result column="starttime" property="starttime" jdbcType="TIMESTAMP" />
+    <result column="starttime" property="starttime" jdbcType="VARCHAR" />
     <result column="type" property="type" jdbcType="INTEGER" />
     <result column="illustrate" property="illustrate" jdbcType="VARCHAR" />
     <result column="solution" property="solution" jdbcType="VARCHAR" />
-    <result column="endtime" property="endtime" jdbcType="TIMESTAMP" />
+    <result column="endtime" property="endtime" jdbcType="VARCHAR" />
     <result column="replaces" property="replaces" jdbcType="VARCHAR" />
     <result column="remark" property="remark" jdbcType="VARCHAR" />
     <result column="createuserid" property="createuserid" jdbcType="INTEGER" />
@@ -16,10 +16,13 @@
     <result column="state" property="state" jdbcType="INTEGER" />
     <result column="ver" property="ver" jdbcType="INTEGER" />
     <result column="del" property="del" jdbcType="INTEGER" />
+    <result column="handlefilename" property="handlefilename" jdbcType="VARCHAR" />
+    <result column="handlefilesavename" property="handlefilesavename" jdbcType="VARCHAR" />
+    <result column="handlefilepath" property="handlefilepath" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
     id, equipid, starttime, type, illustrate, solution, endtime, replaces, remark, createuserid, 
-    updateuserid, state, ver, del
+    updateuserid, state, ver, del, handlefilename, handlefilesavename, handlefilepath
   </sql>
   
   <select id="getMaxIdOrder" resultMap="BaseResultMap">
@@ -32,11 +35,11 @@
   <resultMap id="OrdersMap" type="com.ems.pojo.Orders" >
     <id column="id" property="id" jdbcType="INTEGER" />
     <result column="equipid" property="equipid" jdbcType="VARCHAR" />
-    <result column="starttime" property="starttime" jdbcType="TIMESTAMP" />
+    <result column="starttime" property="starttime" jdbcType="VARCHAR" />
     <result column="type" property="type" jdbcType="INTEGER" />
     <result column="illustrate" property="illustrate" jdbcType="VARCHAR" />
     <result column="solution" property="solution" jdbcType="VARCHAR" />
-    <result column="endtime" property="endtime" jdbcType="TIMESTAMP" />
+    <result column="endtime" property="endtime" jdbcType="VARCHAR" />
     <result column="replaces" property="replaces" jdbcType="VARCHAR" />
     <result column="remark" property="remark" jdbcType="VARCHAR" />
     <result column="createuserid" property="createuserid" jdbcType="INTEGER" />
@@ -44,6 +47,9 @@
     <result column="state" property="state" jdbcType="INTEGER" />
     <result column="ver" property="ver" jdbcType="INTEGER" />
     <result column="del" property="del" jdbcType="INTEGER" />
+    <result column="handlefilename" property="handlefilename" jdbcType="VARCHAR" />
+    <result column="handlefilesavename" property="handlefilesavename" jdbcType="VARCHAR" />
+    <result column="handlefilepath" property="handlefilepath" jdbcType="VARCHAR" />
     <association property="user" javaType="com.ems.pojo.User">
     	<id column="user_id" property="id" jdbcType="INTEGER" />
    		<result column="name" property="name" jdbcType="VARCHAR" />
@@ -55,8 +61,10 @@
   </select>
   
   <update id="updateOrder" parameterType="com.ems.pojo.Orders" >
-  	update orders set endtime = CURRENT_TIMESTAMP,solution = #{solution,jdbcType=VARCHAR},replaces=#{replaces,jdbcType=VARCHAR},
-  	remark=#{remark,jdbcType=VARCHAR},ver=ver+1,updateuserid=#{updateuserid,jdbcType=INTEGER},state=1 where id=#{id,jdbcType=INTEGER}
+  	update orders set endtime = #{endtime,jdbcType=VARCHAR},solution = #{solution,jdbcType=VARCHAR},replaces=#{replaces,jdbcType=VARCHAR},
+  	remark=#{remark,jdbcType=VARCHAR},ver=ver+1,updateuserid=#{updateuserid,jdbcType=INTEGER},state=1,
+  	handlefilename=#{handlefilename,jdbcType=VARCHAR},handlefilesavename=#{handlefilesavename,jdbcType=VARCHAR},handlefilepath=#{handlefilepath,jdbcType=VARCHAR} 
+  	where id=#{id,jdbcType=INTEGER}
   </update>
   
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
@@ -75,9 +83,9 @@
       endtime, replaces, remark, 
       createuserid, updateuserid, state, 
       ver, del)
-    values (#{id,jdbcType=INTEGER}, #{equipid,jdbcType=VARCHAR}, #{starttime,jdbcType=TIMESTAMP}, 
+    values (#{id,jdbcType=INTEGER}, #{equipid,jdbcType=VARCHAR}, #{starttime,jdbcType=VARCHAR}, 
       #{type,jdbcType=INTEGER}, #{illustrate,jdbcType=VARCHAR}, #{solution,jdbcType=VARCHAR}, 
-      #{endtime,jdbcType=TIMESTAMP}, #{replaces,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR}, 
+      #{endtime,jdbcType=VARCHAR}, #{replaces,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR}, 
       #{createuserid,jdbcType=INTEGER}, #{updateuserid,jdbcType=INTEGER}, #{state,jdbcType=INTEGER}, 
       #{ver,jdbcType=INTEGER}, #{del,jdbcType=INTEGER})
   </insert>
@@ -85,6 +93,7 @@
     insert into orders
     <trim prefix="(" suffix=")" suffixOverrides="," >
         equipid,
+        starttime,
         type,
       <if test="illustrate != null" >
         illustrate,
@@ -93,6 +102,7 @@
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
         #{equipid,jdbcType=VARCHAR},
+        #{starttime,jdbcType=VARCHAR},
         #{type,jdbcType=INTEGER},
       <if test="illustrate != null" >
         #{illustrate,jdbcType=VARCHAR},
@@ -107,7 +117,7 @@
         equipid = #{equipid,jdbcType=VARCHAR},
       </if>
       <if test="starttime != null" >
-        starttime = #{starttime,jdbcType=TIMESTAMP},
+        starttime = #{starttime,jdbcType=VARCHAR},
       </if>
       <if test="type != null" >
         type = #{type,jdbcType=INTEGER},
@@ -119,7 +129,7 @@
         solution = #{solution,jdbcType=VARCHAR},
       </if>
       <if test="endtime != null" >
-        endtime = #{endtime,jdbcType=TIMESTAMP},
+        endtime = #{endtime,jdbcType=VARCHAR},
       </if>
       <if test="replaces != null" >
         replaces = #{replaces,jdbcType=VARCHAR},
@@ -142,17 +152,26 @@
       <if test="del != null" >
         del = #{del,jdbcType=INTEGER},
       </if>
+      <if test="handlefilename != null" >
+        handlefilename = #{handlefilename,jdbcType=VARCHAR},
+      </if>
+      <if test="handlefilesavename != null" >
+        handlefilesavename = #{handlefilesavename,jdbcType=VARCHAR},
+      </if>
+      <if test="handlefilepath != null" >
+        handlefilepath = #{handlefilepath,jdbcType=VARCHAR},
+      </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
   <update id="updateByPrimaryKey" parameterType="com.ems.pojo.Orders" >
     update orders
     set equipid = #{equipid,jdbcType=VARCHAR},
-      starttime = #{starttime,jdbcType=TIMESTAMP},
+      starttime = #{starttime,jdbcType=VARCHAR},
       type = #{type,jdbcType=INTEGER},
       illustrate = #{illustrate,jdbcType=VARCHAR},
       solution = #{solution,jdbcType=VARCHAR},
-      endtime = #{endtime,jdbcType=TIMESTAMP},
+      endtime = #{endtime,jdbcType=VARCHAR},
       replaces = #{replaces,jdbcType=VARCHAR},
       remark = #{remark,jdbcType=VARCHAR},
       createuserid = #{createuserid,jdbcType=INTEGER},

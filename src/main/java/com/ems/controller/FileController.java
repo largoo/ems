@@ -30,7 +30,8 @@ public class FileController {
 			@RequestParam(value = "F_FileOfId", required = true) String sId, HttpServletRequest request) {
 		MultipartHttpServletRequest fileRequest = (MultipartHttpServletRequest) request;
 		MultipartFile file = fileRequest.getFile("fileupload");
-		String path = request.getSession().getServletContext().getRealPath("upload") + "\\" + sId + "\\";
+		//String path = request.getSession().getServletContext().getRealPath("upload") + "\\" + sId + "\\";
+		String path = "E:\\emsFile" + "\\" +sId + "\\";
 		String fileName = sType + System.currentTimeMillis() + file.getOriginalFilename();
 
 		ExtFile rf = new ExtFile();

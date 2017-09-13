@@ -1,13 +1,11 @@
 package com.ems.pojo;
 
-import java.util.Date;
-
 public class Orders {
     private Integer id;
 
     private String equipid;
 
-    private Date starttime;
+    private String starttime;
 
     private Integer type;
 
@@ -15,7 +13,7 @@ public class Orders {
 
     private String solution;
 
-    private Date endtime;
+    private String endtime;
 
     private String replaces;
 
@@ -32,8 +30,38 @@ public class Orders {
     private Integer del;
     
     private User user;
+    
+    private String handlefilename;
+    
+    private String handlefilesavename;
+    
+    private String handlefilepath;
+    
+    public String getHandlefilename() {
+		return handlefilename;
+	}
 
-    public User getUser() {
+	public void setHandlefilename(String handlefilename) {
+		this.handlefilename = handlefilename;
+	}
+
+	public String getHandlefilesavename() {
+		return handlefilesavename;
+	}
+
+	public void setHandlefilesavename(String handlefilesavename) {
+		this.handlefilesavename = handlefilesavename;
+	}
+
+	public String getHandlefilepath() {
+		return handlefilepath;
+	}
+
+	public void setHandlefilepath(String handlefilepath) {
+		this.handlefilepath = handlefilepath;
+	}
+
+	public User getUser() {
 		return user;
 	}
 
@@ -57,11 +85,11 @@ public class Orders {
         this.equipid = equipid == null ? null : equipid.trim();
     }
 
-    public Date getStarttime() {
+    public String getStarttime() {
         return starttime;
     }
 
-    public void setStarttime(Date starttime) {
+    public void setStarttime(String starttime) {
         this.starttime = starttime;
     }
 
@@ -89,11 +117,11 @@ public class Orders {
         this.solution = solution == null ? null : solution.trim();
     }
 
-    public Date getEndtime() {
+    public String getEndtime() {
         return endtime;
     }
 
-    public void setEndtime(Date endtime) {
+    public void setEndtime(String endtime) {
         this.endtime = endtime;
     }
 

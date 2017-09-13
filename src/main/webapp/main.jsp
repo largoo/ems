@@ -19,6 +19,9 @@
 		<script type="text/javascript" src="${contextPath}/extjs/ext-lang-zh_CN.js"></script>
 		<script type="text/javascript" src="${contextPath}/extjs/ux/ColumnHeaderGroup.js"></script>
 		<script type="text/javascript" src="${contextPath}/extjs/ux/datepickerplus/DatePickerPlus.js"></script>
+		<script type="text/javascript" src="${contextPath}/extjs/ux/SpinnerField.js"></script>
+		<script type="text/javascript" src="${contextPath}/extjs/ux/Spinner.js"></script>
+		<script type="text/javascript" src="${contextPath}/extjs/ux/DateTimeField.js"></script>
 		<script type="text/javascript" src="${contextPath}/extjs/msg.js"></script>
 		<script type="text/javascript">var user = ${user}</script>
 		<script type="text/javascript" src="${contextPath}/js/main/Main.js"></script>

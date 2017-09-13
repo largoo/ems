@@ -6,10 +6,6 @@
 			"leaf": true,
 			"url": "Equip",
 			"roleid" : 1
-		},{
-			"text": "设备维护记录",
-			"leaf": true,
-			"url": "Order"
 		}]
 	}
 }, {
